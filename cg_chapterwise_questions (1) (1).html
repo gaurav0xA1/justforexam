@@ -1,0 +1,1857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CG Past Questions — TU CSIT</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0e0e0f;--surface:#161618;--surface2:#1a1a1d;
+  --border:#2a2a2e;--border-light:#3a3a40;
+  --text:#e8e8ea;--muted:#888890;--dim:#555560;
+  --accent:#c8f060;--accent-dim:#7aaa20;
+  --fire:#ff6b35;--blue:#60b8ff;
+}
+body{background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;font-size:14px;line-height:1.6;min-height:100vh}
+header{padding:2.5rem 2rem 1.5rem;border-bottom:1px solid var(--border)}
+h1{font-family:'IBM Plex Mono',monospace;font-size:clamp(18px,4vw,28px);font-weight:500;color:var(--accent)}
+.subtitle{font-size:12px;color:var(--muted);margin-top:5px;font-family:'IBM Plex Mono',monospace}
+.stats{display:flex;gap:2rem;margin-top:1.25rem;flex-wrap:wrap}
+.stat{font-family:'IBM Plex Mono',monospace}
+.stat-num{font-size:22px;color:var(--accent);display:block;font-weight:500}
+.stat-label{font-size:11px;color:var(--muted)}
+.controls{padding:1rem 2rem;border-bottom:1px solid var(--border);display:flex;gap:.5rem;align-items:center;flex-wrap:wrap}
+.filter-label{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.08em}
+.year-btn{font-family:'IBM Plex Mono',monospace;font-size:11px;padding:4px 12px;border-radius:3px;border:1px solid var(--border);background:transparent;color:var(--muted);cursor:pointer;transition:all .15s}
+.year-btn:hover{border-color:var(--border-light);color:var(--text)}
+.year-btn.active{background:var(--accent);color:#0e0e0f;border-color:var(--accent);font-weight:500}
+.main{padding:1.5rem 2rem;max-width:960px}
+.chapter{margin-bottom:2.5rem}
+.ch-header{display:flex;align-items:baseline;gap:10px;margin-bottom:.6rem;padding-bottom:.6rem;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.ch-num{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim);text-transform:uppercase;letter-spacing:.1em}
+.ch-name{font-size:14px;font-weight:500;color:var(--text)}
+.ch-count{font-family:'IBM Plex Mono',monospace;font-size:11px;margin-left:auto;color:var(--dim)}
+.freq-bar{height:2px;background:var(--accent);border-radius:2px;margin-bottom:10px;opacity:.5}
+.priority{display:inline-block;font-family:'IBM Plex Mono',monospace;font-size:9px;padding:2px 7px;border-radius:2px;text-transform:uppercase;letter-spacing:.06em;margin-left:6px;vertical-align:middle}
+.p-hot{background:rgba(255,107,53,.15);color:var(--fire);border:1px solid rgba(255,107,53,.3)}
+.p-freq{background:rgba(96,184,255,.1);color:var(--blue);border:1px solid rgba(96,184,255,.2)}
+.questions{display:flex;flex-direction:column;gap:4px}
+.q-wrap{border:1px solid var(--border);border-radius:5px;overflow:hidden;background:var(--surface);transition:border-color .15s}
+.q-wrap.open{border-color:var(--accent-dim)}
+.q-card{display:flex;gap:12px;padding:10px 14px;cursor:pointer;position:relative;user-select:none}
+.q-card:hover{background:rgba(255,255,255,.02)}
+.chevron{position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:14px;color:var(--dim);transition:transform .2s,color .2s;line-height:1;pointer-events:none}
+.q-wrap.open .chevron{transform:translateY(-50%) rotate(180deg);color:var(--accent)}
+.q-meta{display:flex;flex-direction:column;gap:2px;min-width:76px;flex-shrink:0}
+.q-year{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:500;color:var(--accent)}
+.q-sec{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted)}
+.q-marks{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim)}
+.q-text{font-size:13px;color:#c0c0c8;line-height:1.6;flex:1;padding-right:22px}
+.q-text em{color:var(--blue);font-style:normal;font-weight:500}
+.answer-panel{display:none;border-top:1px solid var(--border);background:var(--surface2);padding:1.25rem 1.5rem 1.5rem}
+.q-wrap.open .answer-panel{display:block}
+.ans-content{font-size:13px;line-height:1.85;color:#cecece}
+.ans-content h3{font-size:12px;font-weight:500;color:var(--accent);margin:1rem 0 .35rem;font-family:'IBM Plex Mono',monospace;text-transform:uppercase;letter-spacing:.07em}
+.ans-content h3:first-child{margin-top:0}
+.ans-content p{margin-bottom:.65rem}
+.ans-content ul,.ans-content ol{padding-left:1.2rem;margin-bottom:.65rem}
+.ans-content li{margin-bottom:.25rem}
+.ans-content strong{color:var(--text);font-weight:500}
+.ans-content code{font-family:'IBM Plex Mono',monospace;font-size:11px;background:rgba(200,240,96,.07);color:var(--accent);padding:1px 5px;border-radius:3px}
+.ans-content pre{background:#111113;border:1px solid var(--border);border-radius:4px;padding:.9rem 1rem;overflow-x:auto;margin-bottom:.65rem}
+.ans-content pre code{background:none;padding:0;color:#c0c8c0;font-size:12px}
+.ans-content table{width:100%;border-collapse:collapse;margin-bottom:.65rem;font-size:12px;font-family:'IBM Plex Mono',monospace}
+.ans-content th{background:rgba(200,240,96,.07);color:var(--accent);font-weight:500;padding:5px 10px;text-align:center;border:1px solid var(--border);font-size:11px}
+.ans-content td{padding:4px 10px;border:1px solid var(--border);color:#c0c0c8;text-align:center;vertical-align:top}
+.ans-content td:first-child{text-align:left}
+.ans-footer{margin-top:.85rem;padding-top:.65rem;border-top:1px solid var(--border)}
+.ans-badge{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim)}
+.hidden{display:none!important}
+.empty-msg{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--dim);padding:.5rem 0;display:none}
+footer{padding:1.5rem 2rem;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--dim);border-top:1px solid var(--border);margin-top:2rem}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>CG // Past Questions</h1>
+  <div class="subtitle">TU CSIT · 2075–2081 · Click any question to reveal the answer</div>
+  <div class="stats">
+    <div class="stat"><span class="stat-num" id="total-q">78</span><span class="stat-label">questions</span></div>
+    <div class="stat"><span class="stat-num">6</span><span class="stat-label">years</span></div>
+    <div class="stat"><span class="stat-num">10</span><span class="stat-label">chapters</span></div>
+  </div>
+</header>
+
+<div class="controls">
+  <span class="filter-label">Year →</span>
+  <button class="year-btn active" data-year="all">All</button>
+  <button class="year-btn" data-year="2081">2081</button>
+  <button class="year-btn" data-year="2080">2080</button>
+  <button class="year-btn" data-year="2079">2079</button>
+  <button class="year-btn" data-year="2078">2078</button>
+  <button class="year-btn" data-year="2077">2077</button>
+  <button class="year-btn" data-year="2075">2075</button>
+</div>
+
+<div class="main" id="app"></div>
+<footer>TU CSIT · Computer Graphics · Past Questions 2075–2081</footer>
+
+<script>
+const CHAPTERS=[
+  {id:'ch1',num:'Unit 01',name:'Introduction & Graphics Hardware/Software',freq:28,priority:''},
+  {id:'ch2',num:'Unit 02',name:'Scan Conversion Algorithms',freq:95,priority:'hot'},
+  {id:'ch3',num:'Unit 03',name:'2D Transformations & Clipping',freq:100,priority:'hot'},
+  {id:'ch4',num:'Unit 04',name:'3D Transformations & Viewing',freq:68,priority:'freq'},
+  {id:'ch5',num:'Unit 05',name:'3D Object Representation & Curves',freq:95,priority:'hot'},
+  {id:'ch6',num:'Unit 06',name:'Solid Modeling',freq:65,priority:'freq'},
+  {id:'ch7',num:'Unit 07',name:'Visible Surface Detection',freq:95,priority:'hot'},
+  {id:'ch8',num:'Unit 08',name:'Illumination Models & Rendering',freq:100,priority:'hot'},
+  {id:'ch9',num:'Unit 09',name:'Virtual Reality',freq:58,priority:'freq'},
+  {id:'ch10',num:'Unit 10',name:'OpenGL',freq:52,priority:'freq'},
+];
+
+const Q=[
+// ─── UNIT 1 ───────────────────────────────────────────────────
+{ch:'ch1',y:'2081',s:'Sec B·Q4',m:'5',
+t:'What do you mean by the <em>refresh rate</em> of a display device? Explain <em>vector scan display</em> with a suitable diagram.',
+a:`<h3>Refresh Rate</h3>
+<p><strong>Refresh rate</strong> is the number of times per second the screen is redrawn or updated, measured in <strong>Hz (Hertz)</strong>. A refresh rate of 60 Hz means the image is redrawn 60 times per second. Higher refresh rates reduce flicker and produce smoother visuals. The minimum flicker-free rate for the human eye is about <strong>60 Hz</strong>.</p>
+<h3>Vector Scan Display</h3>
+<p>A <strong>vector scan display</strong> (also called random scan or calligraphic display) draws images by directing the electron beam along straight line paths (vectors) between specified endpoints, rather than scanning every pixel row by row.</p>
+<ul>
+<li>The electron beam is steered directly to draw each line/shape.</li>
+<li>Only the actual drawing commands are stored in a <strong>display file (refresh buffer)</strong>.</li>
+<li>The display file is executed 30–60 times per second to refresh the image.</li>
+<li>Produces very <strong>sharp, crisp lines</strong> — ideal for line drawings, CAD.</li>
+<li><strong>Cannot easily fill areas</strong> or display photographs.</li>
+</ul>
+<h3>Comparison with Raster Scan</h3>
+<table>
+<thead><tr><th>Feature</th><th>Vector Scan</th><th>Raster Scan</th></tr></thead>
+<tbody>
+<tr><td>Beam path</td><td>Follows geometry</td><td>Row by row</td></tr>
+<tr><td>Image quality</td><td>Sharp lines</td><td>Pixelated lines</td></tr>
+<tr><td>Area fill</td><td>Difficult</td><td>Easy</td></tr>
+<tr><td>Use</td><td>CAD, line art</td><td>General display</td></tr>
+</tbody>
+</table>`},
+
+{ch:'ch1',y:'2080',s:'Sec B·Q9',m:'5',
+t:'Calculate the total memory required to store a <em>5-minute video</em> in SVGA system with 24-bit true color and 30 fps.',
+a:`<h3>Given</h3>
+<ul>
+<li>Resolution: SVGA = <strong>800 × 600</strong> pixels</li>
+<li>Color depth: <strong>24 bits</strong> = 3 bytes per pixel</li>
+<li>Frame rate: <strong>30 fps</strong></li>
+<li>Duration: <strong>5 minutes</strong> = 5 × 60 = <strong>300 seconds</strong></li>
+</ul>
+<h3>Formula</h3>
+<p><code>Memory = Width × Height × Bits/pixel × FPS × Seconds</code></p>
+<h3>Calculation</h3>
+<pre><code>Pixels per frame = 800 × 600 = 480,000 pixels
+Bytes per frame  = 480,000 × 3 = 1,440,000 bytes
+Total frames     = 30 × 300    = 9,000 frames
+Total bytes      = 1,440,000 × 9,000 = 12,960,000,000 bytes</code></pre>
+<h3>Result</h3>
+<p><strong>Total memory = 12,960,000,000 bytes ≈ 12.06 GB</strong></p>
+<p>(÷ 1024³ = 12.07 GB)</p>`},
+
+{ch:'ch1',y:'2079',s:'Sec B·Q5',m:'5',
+t:'Differentiate between <em>raster and vector graphics</em> method.',
+a:`<h3>Raster vs Vector Graphics</h3>
+<table>
+<thead><tr><th>Feature</th><th>Raster Graphics</th><th>Vector Graphics</th></tr></thead>
+<tbody>
+<tr><td>Representation</td><td>Grid of pixels</td><td>Mathematical equations/paths</td></tr>
+<tr><td>Scaling</td><td>Loses quality (pixelation)</td><td>Scales without quality loss</td></tr>
+<tr><td>File size</td><td>Large (stores each pixel)</td><td>Small (stores formulas)</td></tr>
+<tr><td>Editing</td><td>Edit individual pixels</td><td>Edit shapes/paths</td></tr>
+<tr><td>Best for</td><td>Photos, complex images</td><td>Logos, diagrams, CAD</td></tr>
+<tr><td>Formats</td><td>BMP, JPEG, PNG, GIF</td><td>SVG, AI, EPS, DXF</td></tr>
+<tr><td>Resolution</td><td>Resolution dependent</td><td>Resolution independent</td></tr>
+<tr><td>Rendering</td><td>Fast to display</td><td>Requires rasterization</td></tr>
+</tbody>
+</table>`},
+
+{ch:'ch1',y:'2079',s:'Sec B·Q8',m:'5',
+t:'Calculate the total memory required to store an <em>8-minute video</em> in SVGA system with 24-bit true color and 25 fps.',
+a:`<h3>Given</h3>
+<ul>
+<li>Resolution: SVGA = <strong>800 × 600</strong></li>
+<li>Color depth: <strong>24 bits</strong> = 3 bytes</li>
+<li>FPS: <strong>25</strong></li>
+<li>Duration: <strong>8 minutes</strong> = 480 seconds</li>
+</ul>
+<h3>Calculation</h3>
+<pre><code>Bytes per frame  = 800 × 600 × 3 = 1,440,000 bytes
+Total frames     = 25 × 480 = 12,000 frames
+Total bytes      = 1,440,000 × 12,000 = 17,280,000,000 bytes</code></pre>
+<h3>Result</h3>
+<p><strong>Total memory ≈ 17.28 GB</strong> (÷ 1024³ ≈ 16.09 GB)</p>`},
+
+{ch:'ch1',y:'2077',s:'Sec B·Q4',m:'5',
+t:'Differentiate between <em>vector and raster graphics</em>.',
+a:`<h3>Vector vs Raster Graphics</h3>
+<table>
+<thead><tr><th>Aspect</th><th>Vector</th><th>Raster</th></tr></thead>
+<tbody>
+<tr><td>Storage</td><td>Geometric primitives (points, lines, curves)</td><td>Pixel matrix (bitmap)</td></tr>
+<tr><td>Scaling</td><td>Infinite — no quality loss</td><td>Quality degrades when enlarged</td></tr>
+<tr><td>Complexity</td><td>Complex shapes = larger file</td><td>Fixed size regardless of complexity</td></tr>
+<tr><td>Examples</td><td>SVG, AI, CDR</td><td>BMP, JPG, PNG</td></tr>
+<tr><td>Use case</td><td>Logos, technical drawings</td><td>Photos, screen output</td></tr>
+</tbody>
+</table>`},
+
+{ch:'ch1',y:'2075',s:'Sec A·Q3',m:'10',
+t:'Describe the <em>architecture of raster scan display</em>.',
+a:`<h3>Raster Scan Display Architecture</h3>
+<p>A raster scan display generates images by scanning the electron beam across the screen from left to right and top to bottom, one <strong>scan line</strong> at a time.</p>
+<h3>Key Components</h3>
+<ul>
+<li><strong>Frame Buffer (Refresh Buffer):</strong> A memory area that stores the intensity value of every pixel on screen. Size = Width × Height × Bits per pixel.</li>
+<li><strong>Video Controller:</strong> Reads the frame buffer and generates the analog signals for the CRT. It cycles through the buffer 60+ times/sec.</li>
+<li><strong>Electron Gun:</strong> Emits an electron beam that strikes phosphor coating on the screen to emit light.</li>
+<li><strong>Deflection System:</strong> Horizontal and vertical deflection coils steer the beam in a raster pattern.</li>
+<li><strong>Horizontal Sync (H-sync):</strong> Signal that resets beam to start of next row after each scan line.</li>
+<li><strong>Vertical Sync (V-sync):</strong> Signal that resets beam to top-left after all rows are drawn.</li>
+</ul>
+<h3>Scanning Process</h3>
+<ol>
+<li>Beam starts at top-left.</li>
+<li>Sweeps left to right across row 1 (active scan).</li>
+<li>H-sync fires → beam returns to start of row 2 (<strong>horizontal retrace</strong>).</li>
+<li>Repeats for all rows.</li>
+<li>V-sync fires → beam returns to top-left (<strong>vertical retrace</strong>).</li>
+<li>Process repeats 60+ times per second.</li>
+</ol>
+<h3>Interlaced vs Non-interlaced</h3>
+<p><strong>Interlaced:</strong> Odd rows first, then even rows (two passes = one frame) — used in older TV. <strong>Non-interlaced (Progressive):</strong> All rows drawn in one pass — smoother, used in monitors.</p>
+<h3>Resolution</h3>
+<p>Defined by number of pixels: e.g., 1920×1080. More pixels = higher quality but larger frame buffer needed.</p>`},
+
+// ─── UNIT 2 ───────────────────────────────────────────────────
+{ch:'ch2',y:'2081',s:'Sec A·Q1',m:'10',
+t:'Derive the expression for <em>Bresenham\'s Line Drawing algorithm</em>. Trace points with starting point (6,12) and end point (10,5).',
+a:`<h3>Derivation of Bresenham's Line Algorithm</h3>
+<p>Consider a line from (x₁,y₁) to (x₂,y₂) with slope <strong>m = Δy/Δx</strong> where 0 ≤ m ≤ 1 (first octant).</p>
+<p>At step xₖ, the true y value is: <code>y = m(xₖ + 1) + b</code></p>
+<p>We choose between two pixels: <strong>upper (xₖ+1, yₖ+1)</strong> and <strong>lower (xₖ+1, yₖ)</strong>.</p>
+<pre><code>d_lower = y − yₖ       = m(xₖ+1) + b − yₖ
+d_upper = (yₖ+1) − y  = yₖ + 1 − m(xₖ+1) − b</code></pre>
+<p>Decision: if <code>d_lower − d_upper &lt; 0</code> → choose lower pixel, else upper.</p>
+<p>Multiply through by <strong>2Δx</strong> to eliminate fractions, define <strong>decision parameter pₖ</strong>:</p>
+<pre><code>pₖ = 2Δy·xₖ − 2Δx·yₖ + c     (where c = 2Δy + Δx(2b−1))
+
+If pₖ &lt; 0:  plot (xₖ+1, yₖ),    pₖ₊₁ = pₖ + 2Δy
+If pₖ ≥ 0:  plot (xₖ+1, yₖ+1),  pₖ₊₁ = pₖ + 2Δy − 2Δx
+
+Initial: p₀ = 2Δy − Δx</code></pre>
+
+<h3>Trace: (6,12) → (10,5)</h3>
+<p>Here Δx=4, Δy=−7. |slope| &gt; 1 so we step along <strong>y-axis</strong> (swap roles: drive on y).<br>
+Δx=4, Δy=7 (magnitudes), step in negative y direction.<br>
+<strong>p₀ = 2Δx − Δy = 2(4) − 7 = 1</strong></p>
+<table>
+<thead><tr><th>Step</th><th>pₖ</th><th>Plot</th><th>Next pₖ</th></tr></thead>
+<tbody>
+<tr><td>Start</td><td>1</td><td>(6, 12)</td><td>—</td></tr>
+<tr><td>1</td><td>1 ≥ 0</td><td>(7, 11)</td><td>1 + 2(4)−2(7) = 1+8−14 = −5</td></tr>
+<tr><td>2</td><td>−5 &lt; 0</td><td>(7, 10)</td><td>−5 + 2(4) = 3</td></tr>
+<tr><td>3</td><td>3 ≥ 0</td><td>(8, 9)</td><td>3+8−14 = −3</td></tr>
+<tr><td>4</td><td>−3 &lt; 0</td><td>(8, 8)</td><td>−3+8 = 5</td></tr>
+<tr><td>5</td><td>5 ≥ 0</td><td>(9, 7)</td><td>5+8−14 = −1</td></tr>
+<tr><td>6</td><td>−1 &lt; 0</td><td>(9, 6)</td><td>−1+8 = 7</td></tr>
+<tr><td>7</td><td>7 ≥ 0</td><td>(10, 5)</td><td>—</td></tr>
+</tbody>
+</table>
+<p><strong>Plotted points:</strong> (6,12), (7,11), (7,10), (8,9), (8,8), (9,7), (9,6), (10,5)</p>`},
+
+{ch:'ch2',y:'2081',s:'Sec B·Q5',m:'5',
+t:'Plot the first octant of a circle centered at (−2,−2), radius 5 using the <em>midpoint circle algorithm</em>.',
+a:`<h3>Midpoint Circle Algorithm</h3>
+<p>Decision parameter: <strong>p₀ = 1 − r = 1 − 5 = −4</strong></p>
+<p>Start at (x,y) = (0, 5). Center offset applied: actual point = (x−2, y−2).</p>
+<table>
+<thead><tr><th>x</th><th>y</th><th>p</th><th>Plot (x−2, y−2)</th></tr></thead>
+<tbody>
+<tr><td>0</td><td>5</td><td>−4</td><td>(−2, 3)</td></tr>
+<tr><td>1</td><td>5</td><td>−4+2(1)+1=−2+1=−2→p=−4+2+1=−2</td><td>(−1, 3)</td></tr>
+<tr><td>2</td><td>5</td><td>−2+4+1−1=2 → p=−2+2(2)+1=1 wait…</td><td></td></tr>
+</tbody>
+</table>
+<p>Let me show the standard table cleanly:</p>
+<p><strong>p₀ = 1 − r = −4</strong>, start (0,5)</p>
+<table>
+<thead><tr><th>x</th><th>y</th><th>pₖ</th><th>Decision</th><th>Actual point (x−2, y−2)</th></tr></thead>
+<tbody>
+<tr><td>0</td><td>5</td><td>−4</td><td>&lt;0 → y stays, p=p+2x+3</td><td>(−2, 3)</td></tr>
+<tr><td>1</td><td>5</td><td>−4+2(0)+3=−1</td><td>&lt;0 → y stays, p=p+2x+3</td><td>(−1, 3)</td></tr>
+<tr><td>2</td><td>5</td><td>−1+2(1)+3=4</td><td>≥0 → y−−, p=p+2x−2y+5</td><td>(0, 3)</td></tr>
+<tr><td>3</td><td>4</td><td>4+2(2)−2(5)+5=4+4−10+5=3</td><td>≥0 → y−−, p=p+2x−2y+5</td><td>(1, 2)</td></tr>
+<tr><td>4</td><td>3</td><td>3+2(3)−2(4)+5=3+6−8+5=6</td><td>≥0 → y−−</td><td>(2, 1)</td></tr>
+<tr><td>5</td><td>2</td><td>x≥y, stop</td><td>—</td><td>(3, 0)</td></tr>
+</tbody>
+</table>
+<p><strong>Points in 1st octant (relative to center −2,−2):</strong><br>
+(−2,3), (−1,3), (0,3), (1,2), (2,1), (3,0)</p>`},
+
+{ch:'ch2',y:'2080',s:'Sec A·Q1',m:'10',
+t:'What is a <em>Digital Differential Analyzer (DDA)</em>? How to draw a line using DDA? Trace points between A(1,3) and B(6,7) using Bresenham\'s line drawing algorithm.',
+a:`<h3>Digital Differential Analyzer (DDA)</h3>
+<p>DDA is a scan conversion algorithm that uses <strong>floating-point arithmetic</strong> to generate intermediate points between two endpoints of a line by incrementing along the longer axis and computing the other coordinate using the slope.</p>
+<h3>DDA Algorithm Steps</h3>
+<pre><code>1. Input: (x1,y1), (x2,y2)
+2. dx = x2 − x1,  dy = y2 − y1
+3. If |dx| > |dy|: steps = |dx|, else steps = |dy|
+4. xInc = dx/steps,  yInc = dy/steps
+5. x = x1, y = y1
+6. For i = 1 to steps:
+     plot(round(x), round(y))
+     x += xInc
+     y += yInc</code></pre>
+<p><strong>Limitation:</strong> Uses floating point — slower than Bresenham's, rounding errors accumulate.</p>
+
+<h3>Bresenham's Trace: A(1,3) → B(6,7)</h3>
+<p>Δx = 5, Δy = 4, slope &lt; 1 → step along x.<br>
+<strong>p₀ = 2Δy − Δx = 2(4) − 5 = 3</strong></p>
+<table>
+<thead><tr><th>Step</th><th>xₖ</th><th>yₖ</th><th>pₖ</th><th>Decision</th><th>Next p</th></tr></thead>
+<tbody>
+<tr><td>0</td><td>1</td><td>3</td><td>3</td><td>p≥0 → y+1</td><td>3+2(4)−2(5)=1</td></tr>
+<tr><td>1</td><td>2</td><td>4</td><td>1</td><td>p≥0 → y+1</td><td>1+8−10=−1</td></tr>
+<tr><td>2</td><td>3</td><td>5</td><td>−1</td><td>p&lt;0 → y stays</td><td>−1+8=7</td></tr>
+<tr><td>3</td><td>4</td><td>5</td><td>7</td><td>p≥0 → y+1</td><td>7+8−10=5</td></tr>
+<tr><td>4</td><td>5</td><td>6</td><td>5</td><td>p≥0 → y+1</td><td>—</td></tr>
+<tr><td>5</td><td>6</td><td>7</td><td>—</td><td>End</td><td>—</td></tr>
+</tbody>
+</table>
+<p><strong>Points:</strong> (1,3), (2,4), (3,5), (4,5), (5,6), (6,7)</p>`},
+
+{ch:'ch2',y:'2080',s:'Sec B·Q4',m:'5',
+t:'Write down algorithm steps of <em>midpoint ellipse drawing algorithm</em>.',
+a:`<h3>Midpoint Ellipse Algorithm</h3>
+<p>Draws an ellipse with semi-axes <strong>rx</strong> (x-radius) and <strong>ry</strong> (y-radius) centered at origin. Uses two regions based on slope = −1 boundary.</p>
+<h3>Region 1 (slope &lt; 1, |dy/dx| &lt; 1 → drive on x)</h3>
+<pre><code>p1₀ = ry²  − rx²·ry + (1/4)·rx²
+
+While (2·ry²·x < 2·rx²·y):
+  Plot(x, y) and symmetric points
+  If p1 < 0:
+    x++
+    p1 = p1 + 2·ry²·x + ry²
+  Else:
+    x++, y--
+    p1 = p1 + 2·ry²·x − 2·rx²·y + ry²</code></pre>
+<h3>Region 2 (slope &gt; 1, drive on y)</h3>
+<pre><code>p2₀ = ry²·(x+0.5)² + rx²·(y−1)² − rx²·ry²
+
+While (y > 0):
+  Plot(x, y) and symmetric points
+  If p2 > 0:
+    y--
+    p2 = p2 − 2·rx²·y + rx²
+  Else:
+    x++, y--
+    p2 = p2 + 2·ry²·x − 2·rx²·y + rx²</code></pre>
+<h3>Symmetry</h3>
+<p>Each computed point (x,y) gives 4 symmetric points: <strong>(±x, ±y)</strong></p>`},
+
+{ch:'ch2',y:'2080',s:'Sec B·Q5',m:'5',
+t:'Explain the importance of <em>filling algorithms</em> in graphics. Differentiate between boundary fill and flood fill algorithm.',
+a:`<h3>Importance of Filling Algorithms</h3>
+<p>Filling algorithms are used to fill the interior of 2D shapes (polygons, circles, etc.) with a color or pattern. They are essential for rendering solid objects, creating realistic images, and distinguishing objects from backgrounds.</p>
+<h3>Boundary Fill Algorithm</h3>
+<p>Starts from a <strong>seed point inside</strong> the shape and fills outward until it hits the specified <strong>boundary color</strong>.</p>
+<pre><code>boundaryFill(x, y, fillColor, boundaryColor):
+  current = getPixel(x, y)
+  if current ≠ boundaryColor AND current ≠ fillColor:
+    setPixel(x, y, fillColor)
+    boundaryFill(x+1, y, ...)
+    boundaryFill(x−1, y, ...)
+    boundaryFill(x, y+1, ...)
+    boundaryFill(x, y−1, ...)</code></pre>
+<h3>Flood Fill Algorithm</h3>
+<p>Starts from a <strong>seed point</strong> and fills all connected pixels that have the same <strong>original color</strong> (interior color), replacing them with the fill color.</p>
+<pre><code>floodFill(x, y, oldColor, newColor):
+  if getPixel(x, y) = oldColor:
+    setPixel(x, y, newColor)
+    floodFill(x+1, y, ...) / floodFill(x−1, y, ...)
+    floodFill(x, y+1, ...) / floodFill(x, y−1, ...)</code></pre>
+<h3>Key Differences</h3>
+<table>
+<thead><tr><th>Feature</th><th>Boundary Fill</th><th>Flood Fill</th></tr></thead>
+<tbody>
+<tr><td>Stopping condition</td><td>Hits boundary color</td><td>Pixel ≠ old color</td></tr>
+<tr><td>Requires</td><td>Boundary color</td><td>Interior (old) color</td></tr>
+<tr><td>Use case</td><td>Defined bordered regions</td><td>Replacing a specific color region</td></tr>
+</tbody>
+</table>`},
+
+{ch:'ch2',y:'2079',s:'Sec A·Q1',m:'10',
+t:'Explain the working details of <em>midpoint circle algorithm</em>. Trace points along the line having endpoints (6,9) and (2,3) using Bresenham\'s.',
+a:`<h3>Midpoint Circle Algorithm</h3>
+<p>Uses the <strong>circle equation f(x,y) = x² + y² − r²</strong> to decide which pixel to plot next. Starting at (0,r), moves clockwise in the first octant and uses 8-way symmetry.</p>
+<p><strong>Decision parameter:</strong> <code>p₀ = 1 − r</code></p>
+<pre><code>If pₖ < 0:  next = (xₖ+1, yₖ),   pₖ₊₁ = pₖ + 2xₖ₊₁ + 1
+If pₖ ≥ 0:  next = (xₖ+1, yₖ−1), pₖ₊₁ = pₖ + 2xₖ₊₁ − 2yₖ₊₁ + 1
+Stop when x ≥ y</code></pre>
+
+<h3>Bresenham's Trace: (6,9) → (2,3)</h3>
+<p>Δx = |2−6| = 4, Δy = |3−9| = 6. Since Δy &gt; Δx → step along <strong>y-axis</strong> (drive on y).<br>
+Direction: x decreases, y decreases.<br>
+<strong>p₀ = 2Δx − Δy = 2(4) − 6 = 2</strong></p>
+<table>
+<thead><tr><th>Step</th><th>Point</th><th>p</th><th>Decision</th><th>Next p</th></tr></thead>
+<tbody>
+<tr><td>0</td><td>(6,9)</td><td>2</td><td>≥0 → x−1</td><td>2+2(4)−2(6)=−2</td></tr>
+<tr><td>1</td><td>(5,8)</td><td>−2</td><td>&lt;0 → x stays</td><td>−2+2(4)=6</td></tr>
+<tr><td>2</td><td>(5,7)</td><td>6</td><td>≥0 → x−1</td><td>6+8−12=2</td></tr>
+<tr><td>3</td><td>(4,6)</td><td>2</td><td>≥0 → x−1</td><td>2+8−12=−2</td></tr>
+<tr><td>4</td><td>(3,5)</td><td>−2</td><td>&lt;0 → x stays</td><td>−2+8=6</td></tr>
+<tr><td>5</td><td>(3,4)</td><td>6</td><td>≥0 → x−1</td><td>—</td></tr>
+<tr><td>6</td><td>(2,3)</td><td>—</td><td>End</td><td>—</td></tr>
+</tbody>
+</table>
+<p><strong>Points:</strong> (6,9), (5,8), (5,7), (4,6), (3,5), (3,4), (2,3)</p>`},
+
+{ch:'ch2',y:'2078',s:'Sec B·Q5',m:'5',
+t:'Plot the 1st octant of a circle centered at origin, radius 10 using midpoint circle algorithm.',
+a:`<h3>Midpoint Circle: r = 10, center (0,0)</h3>
+<p><strong>p₀ = 1 − r = 1 − 10 = −9</strong>, start at (0, 10)</p>
+<table>
+<thead><tr><th>x</th><th>y</th><th>pₖ</th><th>Decision</th><th>Next p</th></tr></thead>
+<tbody>
+<tr><td>0</td><td>10</td><td>−9</td><td>&lt;0 → y stays</td><td>−9+2(0)+3=−6</td></tr>
+<tr><td>1</td><td>10</td><td>−6</td><td>&lt;0 → y stays</td><td>−6+2(1)+3=0</td></tr>
+<tr><td>2</td><td>10</td><td>0</td><td>≥0 → y−−</td><td>0+2(2)−2(10)+5=−11</td></tr>
+<tr><td>3</td><td>9</td><td>−11</td><td>&lt;0 → y stays</td><td>−11+2(3)+3=−2</td></tr>
+<tr><td>4</td><td>9</td><td>−2</td><td>&lt;0 → y stays</td><td>−2+2(4)+3=9</td></tr>
+<tr><td>5</td><td>9</td><td>9</td><td>≥0 → y−−</td><td>9+2(5)−2(9)+5=6</td></tr>
+<tr><td>6</td><td>8</td><td>6</td><td>≥0 → y−−</td><td>6+2(6)−2(8)+5=7</td></tr>
+<tr><td>7</td><td>7</td><td>7</td><td>x≥y, stop</td><td>—</td></tr>
+</tbody>
+</table>
+<p><strong>1st octant points:</strong> (0,10), (1,10), (2,10), (3,9), (4,9), (5,9), (6,8), (7,7)</p>`},
+
+{ch:'ch2',y:'2077',s:'Sec A·Q1',m:'10',
+t:'List the major differences between <em>DDA and Bresenham\'s</em> line drawing algorithm. Illustrate DDA for endpoints (2,2) and (9,2).',
+a:`<h3>DDA vs Bresenham's</h3>
+<table>
+<thead><tr><th>Feature</th><th>DDA</th><th>Bresenham's</th></tr></thead>
+<tbody>
+<tr><td>Arithmetic</td><td>Floating point</td><td>Integer only</td></tr>
+<tr><td>Speed</td><td>Slower</td><td>Faster</td></tr>
+<tr><td>Accuracy</td><td>Rounding errors accumulate</td><td>Precise, no rounding</td></tr>
+<tr><td>Memory</td><td>More (float storage)</td><td>Less (integers)</td></tr>
+<tr><td>Hardware</td><td>Needs FPU</td><td>Simple integer ops only</td></tr>
+<tr><td>Complexity</td><td>Simple</td><td>Slightly more complex derivation</td></tr>
+</tbody>
+</table>
+<h3>DDA Trace: (2,2) → (9,2)</h3>
+<p>Δx = 7, Δy = 0. Steps = max(|7|,|0|) = 7.<br>
+xInc = 7/7 = 1.0, yInc = 0/7 = 0.0</p>
+<table>
+<thead><tr><th>Step</th><th>x (exact)</th><th>y (exact)</th><th>Plot</th></tr></thead>
+<tbody>
+<tr><td>0</td><td>2.0</td><td>2.0</td><td>(2, 2)</td></tr>
+<tr><td>1</td><td>3.0</td><td>2.0</td><td>(3, 2)</td></tr>
+<tr><td>2</td><td>4.0</td><td>2.0</td><td>(4, 2)</td></tr>
+<tr><td>3</td><td>5.0</td><td>2.0</td><td>(5, 2)</td></tr>
+<tr><td>4</td><td>6.0</td><td>2.0</td><td>(6, 2)</td></tr>
+<tr><td>5</td><td>7.0</td><td>2.0</td><td>(7, 2)</td></tr>
+<tr><td>6</td><td>8.0</td><td>2.0</td><td>(8, 2)</td></tr>
+<tr><td>7</td><td>9.0</td><td>2.0</td><td>(9, 2)</td></tr>
+</tbody>
+</table>
+<p>Horizontal line — all y=2, x increments by 1.</p>`},
+
+{ch:'ch2',y:'2075',s:'Sec B·Q5',m:'5',
+t:'Trace <em>Bresenham\'s Line Drawing algorithm</em> for endpoints (1,1) and (8,5).',
+a:`<h3>Bresenham's Trace: (1,1) → (8,5)</h3>
+<p>Δx = 7, Δy = 4, slope &lt; 1 → step along x.<br>
+<strong>p₀ = 2Δy − Δx = 8 − 7 = 1</strong></p>
+<table>
+<thead><tr><th>Step</th><th>xₖ</th><th>yₖ</th><th>pₖ</th><th>Decision</th><th>pₖ₊₁</th></tr></thead>
+<tbody>
+<tr><td>0</td><td>1</td><td>1</td><td>1</td><td>≥0 → y+1</td><td>1+8−14=−5</td></tr>
+<tr><td>1</td><td>2</td><td>2</td><td>−5</td><td>&lt;0 → y stays</td><td>−5+8=3</td></tr>
+<tr><td>2</td><td>3</td><td>2</td><td>3</td><td>≥0 → y+1</td><td>3+8−14=−3</td></tr>
+<tr><td>3</td><td>4</td><td>3</td><td>−3</td><td>&lt;0 → y stays</td><td>−3+8=5</td></tr>
+<tr><td>4</td><td>5</td><td>3</td><td>5</td><td>≥0 → y+1</td><td>5+8−14=−1</td></tr>
+<tr><td>5</td><td>6</td><td>4</td><td>−1</td><td>&lt;0 → y stays</td><td>−1+8=7</td></tr>
+<tr><td>6</td><td>7</td><td>4</td><td>7</td><td>≥0 → y+1</td><td>—</td></tr>
+<tr><td>7</td><td>8</td><td>5</td><td>—</td><td>End</td><td>—</td></tr>
+</tbody>
+</table>
+<p><strong>Points:</strong> (1,1), (2,2), (3,2), (4,3), (5,3), (6,4), (7,4), (8,5)</p>`},
+
+{ch:'ch2',y:'2075',s:'Sec B·Q8',m:'5',
+t:'Plot the ellipse centered at (0,0) with rx=8 and ry=6 using <em>midpoint ellipse drawing algorithm</em>.',
+a:`<h3>Midpoint Ellipse: rx=8, ry=6</h3>
+<p>ry²=36, rx²=64</p>
+<h3>Region 1: start (0,6), p1₀ = ry² − rx²·ry + ¼·rx² = 36 − 64·6 + 16 = 36−384+16 = −332</h3>
+<table>
+<thead><tr><th>x</th><th>y</th><th>p1</th><th>Decision</th></tr></thead>
+<tbody>
+<tr><td>0</td><td>6</td><td>−332</td><td>&lt;0 → x++, p+=2ry²x+ry²</td></tr>
+<tr><td>1</td><td>6</td><td>−332+72+36=−224</td><td>&lt;0 → x++</td></tr>
+<tr><td>2</td><td>6</td><td>−224+144+36=−44</td><td>&lt;0 → x++</td></tr>
+<tr><td>3</td><td>6</td><td>−44+216+36=208 → wait: p+=2·36·3+36=216+36 → −44+252=208</td><td>≥0 → x++,y−−</td></tr>
+<tr><td>4</td><td>5</td><td>208+2·36·4−2·64·6+36=208+288−768+36=−236</td><td>&lt;0 → x++</td></tr>
+<tr><td>5</td><td>5</td><td>−236+360+36=160</td><td>≥0 → x++,y−−</td></tr>
+<tr><td>6</td><td>4</td><td>160+432−640+36=−12</td><td>&lt;0 → x++</td></tr>
+<tr><td>7</td><td>4</td><td>−12+504+36=528 → check 2ry²x &lt; 2rx²y → 2·36·7=504 vs 2·64·4=512 → still R1</td><td>≥0 → x++,y−−</td></tr>
+</tbody>
+</table>
+<p><strong>Region 2</strong> continues with y driving. Key plotted points (1st quadrant): (0,6),(1,6),(2,6),(3,6),(4,5),(5,5),(6,4),(7,4),(8,0) — symmetric to all quadrants via (±x,±y).</p>`},
+
+{ch:'ch2',y:'2078',s:'Sec B·Q11',m:'5',
+t:'Describe the requirement for line clipping. Explain the <em>scan line polygon filling algorithm</em>.',
+a:`<h3>Requirement for Line Clipping</h3>
+<p>Clipping is needed to display only the portion of geometric objects that fall <strong>within the viewport/window</strong>. Objects outside the window waste rendering time and cause visual artefacts if not clipped.</p>
+<h3>Scan Line Polygon Fill Algorithm</h3>
+<p>Fills a polygon by processing it one horizontal scan line at a time from bottom to top.</p>
+<h3>Steps</h3>
+<ol>
+<li><strong>Build Edge Table (ET):</strong> For each non-horizontal edge, store: y_min, y_max, x at y_min, slope inverse (1/m).</li>
+<li><strong>Initialize Active Edge Table (AET):</strong> Empty.</li>
+<li><strong>For each scan line y (bottom to top):</strong>
+  <ul>
+  <li>Add edges from ET whose y_min = y into AET.</li>
+  <li>Remove edges from AET whose y_max = y.</li>
+  <li>Sort AET by x coordinate.</li>
+  <li>Fill pixels between pairs of x intersections (x₁→x₂, x₃→x₄, ...).</li>
+  <li>Update x values: x = x + 1/m for each edge in AET.</li>
+  </ul>
+</li>
+</ol>
+<h3>Inside-Outside Test</h3>
+<p>The <strong>even-odd rule</strong> (parity rule): cast a ray from point — if it crosses the polygon boundary an odd number of times, the point is inside.</p>`},
+
+// ─── UNIT 3 ───────────────────────────────────────────────────
+{ch:'ch3',y:'2081',s:'Sec A·Q2',m:'10',
+t:'What is the major drawback of <em>Sutherland-Hodgeman Polygon Clipping</em>? Illustrate with a suitable example.',
+a:`<h3>Sutherland-Hodgeman Polygon Clipping</h3>
+<p>This algorithm clips a polygon against each edge of a rectangular clip window one at a time (4 passes: left, right, bottom, top). It processes the polygon vertex list through each clip boundary.</p>
+<h3>Four Cases per Edge</h3>
+<table>
+<thead><tr><th>Case</th><th>Inside→Inside</th><th>Inside→Outside</th><th>Outside→Inside</th><th>Outside→Outside</th></tr></thead>
+<tbody>
+<tr><td>Output</td><td>Add endpoint</td><td>Add intersection</td><td>Add intersect + endpoint</td><td>Nothing</td></tr>
+</tbody>
+</table>
+<h3>Major Drawback</h3>
+<p>Sutherland-Hodgeman produces <strong>incorrect results for concave (non-convex) polygons</strong> when the clip window clips multiple disconnected portions. It generates a <strong>single connected polygon</strong> instead of separate polygons, creating spurious extra edges across the clip window.</p>
+<h3>Example</h3>
+<p>Consider a concave (U-shaped) polygon clipped by a rectangular window. The algorithm connects the two separate visible segments with an unwanted edge along the clip boundary, producing a filled area that was not part of the original polygon.</p>
+<ul>
+<li>Original: concave polygon with vertices outside the window on both sides.</li>
+<li>Expected output: two separate polygon pieces.</li>
+<li>Actual output: one polygon with an extra connecting edge — <strong>incorrect fill</strong>.</li>
+</ul>
+<h3>Solution</h3>
+<p>Use <strong>Weiler-Atherton algorithm</strong> which correctly handles concave polygons and produces multiple output polygons when needed.</p>`},
+
+{ch:'ch3',y:'2081',s:'Sec B·Q6',m:'5',
+t:'Given triangle A(2,3) B(5,5) C(4,3) — rotate 90° about origin then translate 2 units each direction. Use <em>homogeneous transformation matrix</em>.',
+a:`<h3>Step 1: Rotation by 90° CCW</h3>
+<p>Rotation matrix for 90°:</p>
+<pre><code>R = | cos90  −sin90  0 |   =  | 0  −1  0 |
+    | sin90   cos90  0 |      | 1   0  0 |
+    |   0       0    1 |      | 0   0  1 |</code></pre>
+<h3>Step 2: Translation by (2,2)</h3>
+<pre><code>T = | 1  0  2 |
+    | 0  1  2 |
+    | 0  0  1 |</code></pre>
+<h3>Composite Matrix M = T · R</h3>
+<pre><code>M = | 0  −1  2 |
+    | 1   0  2 |
+    | 0   0  1 |</code></pre>
+<h3>Apply to each vertex [x, y, 1]ᵀ</h3>
+<table>
+<thead><tr><th>Point</th><th>Original</th><th>Transformed</th></tr></thead>
+<tbody>
+<tr><td>A</td><td>(2, 3)</td><td>(0·2−1·3+2, 1·2+0·3+2) = (−1, 4)</td></tr>
+<tr><td>B</td><td>(5, 5)</td><td>(0·5−1·5+2, 1·5+0·5+2) = (−3, 7)</td></tr>
+<tr><td>C</td><td>(4, 3)</td><td>(0·4−1·3+2, 1·4+0·3+2) = (−1, 6)</td></tr>
+</tbody>
+</table>
+<p><strong>New vertices: A'(−1,4), B'(−3,7), C'(−1,6)</strong></p>`},
+
+{ch:'ch3',y:'2080',s:'Sec A·Q3',m:'10',
+t:'Why is <em>Liang-Barsky more efficient</em> than Cohen-Sutherland? Explain the clipping procedure of Liang-Barsky with suitable example.',
+a:`<h3>Why Liang-Barsky is More Efficient</h3>
+<ul>
+<li>Uses <strong>parametric form</strong> of the line — only 1 parametric equation set, no region code computation.</li>
+<li>Requires fewer computations — finds the clipping parameter directly without iterative region-code comparisons.</li>
+<li>No need to compute intersection points multiple times (Cohen-Sutherland may recalculate intersections repeatedly).</li>
+<li>Works directly with the parameter t ∈ [0,1] — efficient t₁ and t₂ update.</li>
+</ul>
+<h3>Liang-Barsky Algorithm</h3>
+<p>Line: P(t) = P₁ + t(P₂−P₁), where t ∈ [0,1].<br>
+Clip window: xL ≤ x ≤ xR, yB ≤ y ≤ yT</p>
+<pre><code>Define: p1=−dx, p2=dx, p3=−dy, p4=dy
+        q1=x1−xL, q2=xR−x1, q3=y1−yB, q4=yT−y1
+
+For each i:
+  If pi=0 and qi&lt;0 → line parallel and outside → reject
+  If pi&lt;0 → r=qi/pi updates t1 (entering)
+  If pi&gt;0 → r=qi/pi updates t2 (exiting)
+
+t1 = max(0, all entering r values)
+t2 = min(1, all exiting r values)
+If t1 &gt; t2 → line entirely outside, reject
+Else clip endpoints: P'1 = P1 + t1·d,  P'2 = P1 + t2·d</code></pre>
+<h3>Example: Clip (−1,1)→(4,4), window (0,0)−(3,3)</h3>
+<pre><code>dx=5, dy=3
+p1=−5, p2=5, p3=−3, p4=3
+q1=−1, q2=3+1=4 → wait: q1=x1−xL=−1−0=−1, q2=xR−x1=3−(−1)=4
+q3=y1−yB=1−0=1, q4=yT−y1=3−1=2
+
+p1=−5&lt;0: t1=max(0,−1/−5)=max(0,0.2)=0.2
+p2=5&gt;0:  t2=min(1, 4/5)=min(1,0.8)=0.8
+p3=−3&lt;0: t1=max(0.2,1/3)=max(0.2,0.33)=0.33
+p4=3&gt;0:  t2=min(0.8,2/3)=min(0.8,0.67)=0.67
+
+t1=0.33, t2=0.67 → t1&lt;t2 → line is visible
+
+P'1 = (−1+0.33·5, 1+0.33·3) = (0.65, 2)  ≈ (0.65, 2)
+P'2 = (−1+0.67·5, 1+0.67·3) = (2.35, 3)</code></pre>`},
+
+{ch:'ch3',y:'2080',s:'Sec B·Q7',m:'5',
+t:'Reflect a line segment with endpoints (9,3) and (12,10) about a line <em>X=7</em>. Draw initial and final result graph.',
+a:`<h3>Reflection about Vertical Line X = a</h3>
+<p>For reflection about x = 7, the formula is:<br>
+<strong>x' = 2a − x = 14 − x,  y' = y</strong></p>
+<h3>Applying to each point</h3>
+<table>
+<thead><tr><th>Point</th><th>Original</th><th>Reflected (x'=14−x, y'=y)</th></tr></thead>
+<tbody>
+<tr><td>P1</td><td>(9, 3)</td><td>(14−9, 3) = <strong>(5, 3)</strong></td></tr>
+<tr><td>P2</td><td>(12, 10)</td><td>(14−12, 10) = <strong>(2, 10)</strong></td></tr>
+</tbody>
+</table>
+<h3>Transformation Matrix Method</h3>
+<pre><code>Translate by −a: T(−7,0) → Scale x by −1: S → Translate back T(+7,0)
+
+M = T(7)·S(−1,1)·T(−7) = | −1  0  14 |
+                           |  0  1   0 |
+                           |  0  0   1 |</code></pre>
+<p><strong>Original line:</strong> (9,3)→(12,10)<br>
+<strong>Reflected line:</strong> (5,3)→(2,10) — mirror image about x=7 (which lies between x=2 and x=12).</p>`},
+
+{ch:'ch3',y:'2079',s:'Sec A·Q3',m:'10',
+t:'Write the algorithm for <em>Cohen-Sutherland Line Clipping</em>. Clip the polygon A(100,150) B(200,250) C(300,200) with clipping window (100,300),(300,300),(200,100) using Sutherland-Hodgeman.',
+a:`<h3>Cohen-Sutherland Algorithm</h3>
+<p>Assigns a 4-bit <strong>outcode</strong> to each endpoint: TOP | BOTTOM | RIGHT | LEFT</p>
+<pre><code>Bit 3 (LEFT):   x < xmin
+Bit 2 (RIGHT):  x > xmax
+Bit 1 (BOTTOM): y < ymin
+Bit 0 (TOP):    y > ymax
+
+While true:
+  Compute outcodes OC1, OC2
+  If OC1 | OC2 = 0 → trivially accept
+  If OC1 & OC2 ≠ 0 → trivially reject
+  Else: find intersecting boundary, clip, update endpoint</code></pre>
+<h3>Sutherland-Hodgeman: Triangle A(100,150) B(200,250) C(300,200)</h3>
+<p>Clipping window: let's interpret as rectangle xmin=100, xmax=300, ymin=100, ymax=300.</p>
+<p>Clip against each of 4 edges:</p>
+<p><strong>Left edge (x=100):</strong> All vertices x ≥ 100. No change. Output: A,B,C.</p>
+<p><strong>Right edge (x=300):</strong> All vertices x ≤ 300. No change. Output: A,B,C.</p>
+<p><strong>Bottom edge (y=100):</strong> All vertices y ≥ 100. No change. Output: A,B,C.</p>
+<p><strong>Top edge (y=300):</strong> Check each vertex: A(150)&lt;300 ✓, B(250)&lt;300 ✓, C(200)&lt;300 ✓. All inside.</p>
+<p><strong>Result: The entire triangle A(100,150) B(200,250) C(300,200) lies within the clipping window — no clipping occurs.</strong></p>`},
+
+{ch:'ch3',y:'2079',s:'Sec B·Q4',m:'5',
+t:'Reflect a line segment with endpoints (9,3) and (12,10) about a line <em>Y=7</em>. Draw initial and final result graph.',
+a:`<h3>Reflection about Horizontal Line Y = b</h3>
+<p>Formula: <strong>x' = x,  y' = 2b − y = 14 − y</strong></p>
+<table>
+<thead><tr><th>Point</th><th>Original</th><th>Reflected</th></tr></thead>
+<tbody>
+<tr><td>P1</td><td>(9, 3)</td><td>(9, 14−3) = <strong>(9, 11)</strong></td></tr>
+<tr><td>P2</td><td>(12, 10)</td><td>(12, 14−10) = <strong>(12, 4)</strong></td></tr>
+</tbody>
+</table>
+<h3>Matrix Method</h3>
+<pre><code>M = T(0,7)·S(1,−1)·T(0,−7) = | 1   0   0 |
+                                | 0  −1  14 |
+                                | 0   0   1 |</code></pre>
+<p><strong>Original:</strong> (9,3)→(12,10). <strong>Reflected about Y=7:</strong> (9,11)→(12,4)</p>
+<p>Note: point (9,3) is 4 units below Y=7, so its reflection is 4 units above → y=11. Point (12,10) is 3 units above Y=7, so reflection is 3 units below → y=4.</p>`},
+
+{ch:'ch3',y:'2079',s:'Sec B·Q9',m:'5',
+t:'Find the <em>composite transformation matrix for reflection</em> about a line y=mx+c.',
+a:`<h3>Reflection about y = mx + c</h3>
+<p>This requires 4 steps: translate to origin, rotate to align with x-axis, reflect about x-axis, undo rotation, undo translation.</p>
+<h3>Steps</h3>
+<ol>
+<li><strong>T₁:</strong> Translate so line passes through origin → T(0, −c)</li>
+<li><strong>R₁:</strong> Rotate by −θ where tan θ = m → align line with x-axis</li>
+<li><strong>S:</strong> Reflect about x-axis → S(1, −1)</li>
+<li><strong>R₂:</strong> Rotate back by +θ</li>
+<li><strong>T₂:</strong> Translate back → T(0, c)</li>
+</ol>
+<h3>Let θ = arctan(m), cos θ = 1/√(1+m²), sin θ = m/√(1+m²)</h3>
+<pre><code>M = T₂ · R₂ · S · R₁ · T₁</code></pre>
+<h3>Final Composite Matrix</h3>
+<pre><code>        | (1−m²)/(1+m²)    2m/(1+m²)       −2mc/(1+m²) |
+M  =    | 2m/(1+m²)       −(1−m²)/(1+m²)   2c/(1+m²)  |
+        |      0                0                 1      |</code></pre>`},
+
+{ch:'ch3',y:'2078',s:'Sec B·Q7',m:'5',
+t:'Find the new coordinates of triangle A(0,0) B(1,1) C(5,2) after being <em>magnified to twice its size</em>.',
+a:`<h3>Scaling by factor 2 (about origin)</h3>
+<p>Scaling matrix: <code>S(2,2)</code></p>
+<pre><code>S = | 2  0  0 |
+    | 0  2  0 |
+    | 0  0  1 |</code></pre>
+<h3>Apply to each vertex</h3>
+<table>
+<thead><tr><th>Point</th><th>Original</th><th>Transformed (x·2, y·2)</th></tr></thead>
+<tbody>
+<tr><td>A</td><td>(0, 0)</td><td><strong>(0, 0)</strong></td></tr>
+<tr><td>B</td><td>(1, 1)</td><td><strong>(2, 2)</strong></td></tr>
+<tr><td>C</td><td>(5, 2)</td><td><strong>(10, 4)</strong></td></tr>
+</tbody>
+</table>
+<p><strong>New triangle: A'(0,0), B'(2,2), C'(10,4)</strong> — scaled uniformly by factor 2 about origin.</p>`},
+
+{ch:'ch3',y:'2077',s:'Sec B·Q5',m:'5',
+t:'Translate triangle ABC with A(0,0) B(5,0) C(5,5) by <em>2 units in x-direction and 3 units in y-direction</em>.',
+a:`<h3>Translation Matrix T(2,3)</h3>
+<pre><code>T = | 1  0  2 |
+    | 0  1  3 |
+    | 0  0  1 |</code></pre>
+<h3>Apply to each vertex [x, y, 1]ᵀ</h3>
+<table>
+<thead><tr><th>Point</th><th>Original</th><th>x' = x+2</th><th>y' = y+3</th><th>New Point</th></tr></thead>
+<tbody>
+<tr><td>A</td><td>(0, 0)</td><td>2</td><td>3</td><td><strong>(2, 3)</strong></td></tr>
+<tr><td>B</td><td>(5, 0)</td><td>7</td><td>3</td><td><strong>(7, 3)</strong></td></tr>
+<tr><td>C</td><td>(5, 5)</td><td>7</td><td>8</td><td><strong>(7, 8)</strong></td></tr>
+</tbody>
+</table>
+<p><strong>New triangle: A'(2,3), B'(7,3), C'(7,8)</strong></p>`},
+
+{ch:'ch3',y:'2077',s:'Sec B·Q11',m:'5',
+t:'Let ABCD be rectangle A(0,0) B(10,0) C(10,10) D(0,10). Use <em>Liang-Barsky</em> to clip line X(5,3)–Y(15,9).',
+a:`<h3>Liang-Barsky Clipping</h3>
+<p>Window: xL=0, xR=10, yB=0, yT=10.<br>
+Line: X(5,3)→Y(15,9). dx=10, dy=6.</p>
+<pre><code>p1=−dx=−10, q1=x1−xL=5−0=5
+p2=+dx=10,  q2=xR−x1=10−5=5
+p3=−dy=−6,  q3=y1−yB=3−0=3
+p4=+dy=6,   q4=yT−y1=10−3=7
+
+t1=0, t2=1 initially
+
+p1=−10&lt;0 (entering left):   t1=max(0, 5/10)=0.5
+p2=10&gt;0  (exiting right):   t2=min(1, 5/10)=0.5
+p3=−6&lt;0  (entering bottom): t1=max(0.5, 3/6)=max(0.5,0.5)=0.5
+p4=6&gt;0   (exiting top):     t2=min(0.5, 7/6)=min(0.5,1.17)=0.5
+
+t1=0.5, t2=0.5 → t1=t2 → line clips to a POINT</code></pre>
+<h3>Clipped segment</h3>
+<pre><code>x' = 5 + 0.5·10 = 10,  y' = 3 + 0.5·6 = 6  → point (10, 6)</code></pre>
+<p>Since t1=t2, the visible portion degenerates to a single point <strong>(10,6)</strong> on the window boundary. The line exits through the right boundary at exactly this point.</p>`},
+
+{ch:'ch3',y:'2075',s:'Sec A·Q1',m:'10',
+t:'Define window, viewport and <em>viewing transformation</em>. Use Cohen-Sutherland to clip line P(10,30)–Q(80,90) with window A(20,20) B(90,20) C(90,70) D(20,70).',
+a:`<h3>Definitions</h3>
+<p><strong>Window:</strong> A rectangular region in the <em>world coordinate</em> space that defines what portion of the scene is visible.</p>
+<p><strong>Viewport:</strong> A rectangular region on the <em>screen/device</em> where the window contents are displayed.</p>
+<p><strong>Viewing Transformation (Window-to-Viewport):</strong></p>
+<pre><code>sx = (xv_max − xv_min) / (xw_max − xw_min)
+sy = (yv_max − yv_min) / (yw_max − yw_min)
+xv = xv_min + (xw − xw_min)·sx
+yv = yv_min + (yw − yw_min)·sy</code></pre>
+
+<h3>Cohen-Sutherland: Window xmin=20,xmax=90,ymin=20,ymax=70</h3>
+<p>Outcode bits: LEFT(x&lt;20) | RIGHT(x&gt;90) | BOTTOM(y&lt;20) | TOP(y&gt;70)</p>
+<table>
+<thead><tr><th>Point</th><th>x</th><th>y</th><th>LEFT</th><th>RIGHT</th><th>BOT</th><th>TOP</th><th>Code</th></tr></thead>
+<tbody>
+<tr><td>P(10,30)</td><td>10</td><td>30</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0001</td></tr>
+<tr><td>Q(80,90)</td><td>80</td><td>90</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1000</td></tr>
+</tbody>
+</table>
+<p>OC_P & OC_Q = 0000 → not trivially rejected.<br>OC_P | OC_Q ≠ 0 → clip needed.</p>
+<p><strong>Clip P against LEFT (x=20):</strong><br>
+t = (20−10)/(80−10) = 10/70 ≈ 0.143<br>
+y = 30 + 0.143·(90−30) = 30+8.57 ≈ 38.57<br>
+New P = (20, 38.57), code = 0000 ✓</p>
+<p><strong>Clip Q against TOP (y=70):</strong><br>
+t = (90−70)/(90−38.57) = 20/51.43 ≈ 0.389<br>
+x = 80 − 0.389·(80−20) = 80−23.33 ≈ 56.67<br>
+New Q = (56.67, 70), code = 0000 ✓</p>
+<p><strong>Clipped line: (20, 38.57) → (56.67, 70)</strong></p>`},
+
+{ch:'ch3',y:'2075',s:'Sec B·Q9',m:'5',
+t:'Define clipping. Discuss about <em>cubic spline interpolation</em>.',
+a:`<h3>Clipping</h3>
+<p>Clipping is the process of <strong>removing portions of graphical objects</strong> that lie outside a specified region (clip window). It ensures only the visible portion of objects is rendered.</p>
+<h3>Cubic Spline Interpolation</h3>
+<p>A <strong>cubic spline</strong> is a piecewise cubic polynomial that passes through all given data points (knots) and ensures <strong>continuity of the curve and its first two derivatives</strong> at each knot.</p>
+<h3>Properties</h3>
+<ul>
+<li>Passes through all control points (interpolation, not approximation).</li>
+<li>C² continuity: first and second derivatives match at knots → smooth curves.</li>
+<li>Between knots i and i+1: <code>S(t) = aᵢ + bᵢt + cᵢt² + dᵢt³</code></li>
+</ul>
+<h3>Conditions to solve coefficients</h3>
+<ul>
+<li>Curve passes through each knot: S(xᵢ) = yᵢ</li>
+<li>First derivative continuity: Sᵢ'(xᵢ₊₁) = Sᵢ₊₁'(xᵢ₊₁)</li>
+<li>Second derivative continuity: Sᵢ''(xᵢ₊₁) = Sᵢ₊₁''(xᵢ₊₁)</li>
+<li>Boundary conditions: natural spline sets S''(x₀) = S''(xₙ) = 0</li>
+</ul>
+<p>For n+1 points, this gives a tridiagonal system of n−1 equations, solved efficiently.</p>`},
+
+// ─── UNIT 4 ───────────────────────────────────────────────────
+{ch:'ch4',y:'2081',s:'Sec B·Q10',m:'5',
+t:'Differentiate between <em>parallel projection and perspective projections</em>.',
+a:`<h3>Parallel vs Perspective Projection</h3>
+<table>
+<thead><tr><th>Feature</th><th>Parallel Projection</th><th>Perspective Projection</th></tr></thead>
+<tbody>
+<tr><td>Center of projection</td><td>At infinity</td><td>At a finite point (eye)</td></tr>
+<tr><td>Projection lines</td><td>Parallel to each other</td><td>Converge at viewpoint</td></tr>
+<tr><td>Preserves</td><td>Shape and size</td><td>Neither (far = smaller)</td></tr>
+<tr><td>Realism</td><td>Less realistic</td><td>More realistic (like human eye)</td></tr>
+<tr><td>Depth cue</td><td>No foreshortening</td><td>Objects diminish with distance</td></tr>
+<tr><td>Use</td><td>Engineering/CAD drawings</td><td>Games, movies, VR</td></tr>
+<tr><td>Vanishing points</td><td>None</td><td>1, 2, or 3 vanishing points</td></tr>
+<tr><td>Parallel lines</td><td>Stay parallel</td><td>Converge at vanishing point</td></tr>
+</tbody>
+</table>
+<h3>Types of Parallel Projection</h3>
+<ul>
+<li><strong>Orthographic:</strong> Projection plane perpendicular to projection direction (front, side, top views).</li>
+<li><strong>Oblique:</strong> Projection plane not perpendicular — cavalier, cabinet projections.</li>
+</ul>`},
+
+{ch:'ch4',y:'2077',s:'Sec B·Q6',m:'5',
+t:'Differentiate between <em>orthographic, parallel, and perspective projections</em>.',
+a:`<h3>Types of Projection</h3>
+<table>
+<thead><tr><th>Feature</th><th>Orthographic</th><th>Oblique (Parallel)</th><th>Perspective</th></tr></thead>
+<tbody>
+<tr><td>Projection lines</td><td>Perpendicular to plane</td><td>Parallel, oblique angle</td><td>Converge at eye</td></tr>
+<tr><td>Projection plane</td><td>⊥ to direction</td><td>Not ⊥</td><td>Any</td></tr>
+<tr><td>Distortion</td><td>None</td><td>Some</td><td>Foreshortening</td></tr>
+<tr><td>Realism</td><td>None</td><td>Moderate</td><td>High</td></tr>
+<tr><td>Use</td><td>Technical drawings</td><td>Pictorial drawings</td><td>VR, games, film</td></tr>
+</tbody>
+</table>
+<p><strong>Orthographic</strong> is a special case of parallel projection where the direction of projection is perpendicular to the view plane. It preserves shape and allows accurate measurement. <strong>Oblique</strong> shows three faces of an object in one view. <strong>Perspective</strong> mimics human vision — far objects appear smaller.</p>`},
+
+{ch:'ch4',y:'2075',s:'Sec B·Q6',m:'5',
+t:'Derive the relation for <em>3D translation and rotation</em>.',
+a:`<h3>3D Translation</h3>
+<p>A point P(x,y,z) is translated by (tx,ty,tz):</p>
+<pre><code>x' = x + tx
+y' = y + ty
+z' = z + tz</code></pre>
+<p>In homogeneous coordinates:</p>
+<pre><code>| x' |   | 1  0  0  tx |   | x |
+| y' | = | 0  1  0  ty | · | y |
+| z' |   | 0  0  1  tz |   | z |
+| 1  |   | 0  0  0   1 |   | 1 |</code></pre>
+<h3>3D Rotation</h3>
+<p>Rotation about the <strong>Z-axis</strong> by angle θ:</p>
+<pre><code>Rz = | cosθ  −sinθ  0  0 |
+     | sinθ   cosθ  0  0 |
+     |  0      0    1  0 |
+     |  0      0    0  1 |</code></pre>
+<p>Rotation about the <strong>X-axis</strong>:</p>
+<pre><code>Rx = | 1   0     0    0 |
+     | 0  cosθ −sinθ  0 |
+     | 0  sinθ  cosθ  0 |
+     | 0   0     0    1 |</code></pre>
+<p>Rotation about the <strong>Y-axis</strong>:</p>
+<pre><code>Ry = | cosθ   0  sinθ  0 |
+     |  0     1   0    0 |
+     | −sinθ  0  cosθ  0 |
+     |  0     0   0    1 |</code></pre>`},
+
+// ─── UNIT 5 ───────────────────────────────────────────────────
+{ch:'ch5',y:'2081',s:'Sec A·Q2',m:'10',
+t:'Explain <em>B-spline curve and its properties</em>.',
+a:`<h3>B-Spline Curve</h3>
+<p>A B-spline is a generalization of Bezier curves defined by <strong>n+1 control points</strong> and a <strong>knot vector</strong>. The curve is expressed as:</p>
+<pre><code>P(t) = Σ Pᵢ · Nᵢ,k(t)   for i = 0 to n</code></pre>
+<p>where <strong>Nᵢ,k(t)</strong> are B-spline basis functions of degree k, defined recursively:</p>
+<pre><code>Nᵢ,1(t) = 1 if tᵢ ≤ t < tᵢ₊₁, else 0
+Nᵢ,k(t) = (t−tᵢ)/(tᵢ₊ₖ₋₁−tᵢ)·Nᵢ,k₋₁(t) + (tᵢ₊ₖ−t)/(tᵢ₊ₖ−tᵢ₊₁)·Nᵢ₊₁,k₋₁(t)</code></pre>
+<h3>Properties of B-Spline</h3>
+<ul>
+<li><strong>Local control:</strong> Moving one control point only affects k curve segments — unlike Bezier where moving one point changes the whole curve.</li>
+<li><strong>Convex hull property:</strong> Curve lies within the convex hull of its control points.</li>
+<li><strong>Variation diminishing:</strong> The curve does not oscillate more than the control polygon.</li>
+<li><strong>Continuity:</strong> Cᵏ⁻² continuity at interior knots (degree k curve).</li>
+<li><strong>Partition of unity:</strong> Σ Nᵢ,k(t) = 1 for all t.</li>
+<li><strong>Does not interpolate control points</strong> (approximates them) — except at endpoints in clamped B-splines.</li>
+<li><strong>Order independence:</strong> Degree can be chosen independently of the number of control points.</li>
+</ul>
+<h3>Comparison with Bezier</h3>
+<table>
+<thead><tr><th>Feature</th><th>Bezier</th><th>B-Spline</th></tr></thead>
+<tbody>
+<tr><td>Control</td><td>Global</td><td>Local</td></tr>
+<tr><td>Degree</td><td>= n (no. of points − 1)</td><td>Independent of n</td></tr>
+<tr><td>Segments</td><td>Single</td><td>Multiple piecewise</td></tr>
+<tr><td>Continuity</td><td>Varies</td><td>Cᵏ⁻² guaranteed</td></tr>
+</tbody>
+</table>`},
+
+{ch:'ch5',y:'2081',s:'Sec B·Q7',m:'5',
+t:'Construct the <em>Bezier curve</em> with control points A(1,1) B(2,3) C(4,3) D(6,4).',
+a:`<h3>Cubic Bezier Curve (4 control points)</h3>
+<p>Formula: <code>P(t) = (1−t)³P₀ + 3t(1−t)²P₁ + 3t²(1−t)P₂ + t³P₃</code>, t ∈ [0,1]</p>
+<p>P₀=(1,1), P₁=(2,3), P₂=(4,3), P₃=(6,4)</p>
+<h3>Bernstein Basis: B₀=(1−t)³, B₁=3t(1−t)², B₂=3t²(1−t), B₃=t³</h3>
+<table>
+<thead><tr><th>t</th><th>B₀</th><th>B₁</th><th>B₂</th><th>B₃</th><th>x</th><th>y</th></tr></thead>
+<tbody>
+<tr><td>0.0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>1.0</td><td>1.0</td></tr>
+<tr><td>0.25</td><td>0.422</td><td>0.422</td><td>0.141</td><td>0.016</td><td>1+0.844+0.563+0.094=2.50</td><td>1+1.266+0.422+0.063=2.75</td></tr>
+<tr><td>0.5</td><td>0.125</td><td>0.375</td><td>0.375</td><td>0.125</td><td>0.125+0.75+1.5+0.75=3.125</td><td>0.125+1.125+1.125+0.5=2.875</td></tr>
+<tr><td>0.75</td><td>0.016</td><td>0.141</td><td>0.422</td><td>0.422</td><td>0.016+0.281+1.688+2.531=4.52</td><td>0.016+0.422+1.266+1.688=3.39</td></tr>
+<tr><td>1.0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>6.0</td><td>4.0</td></tr>
+</tbody>
+</table>
+<p><strong>Key points on curve:</strong> (1,1), (2.5,2.75), (3.125,2.875), (4.52,3.39), (6,4)</p>
+<p>Properties: passes through endpoints A and D only; lies within convex hull of ABCD; tangent at A points toward B, tangent at D points from C.</p>`},
+
+{ch:'ch5',y:'2079',s:'Sec B·Q6',m:'5',
+t:'Explain about <em>parametric curve</em>. Describe the properties of Bezier curve.',
+a:`<h3>Parametric Curve</h3>
+<p>A <strong>parametric curve</strong> represents each coordinate as a separate function of a single parameter t:</p>
+<pre><code>P(t) = [x(t), y(t), z(t)]   where t ∈ [t_min, t_max]</code></pre>
+<p><strong>Advantages:</strong> Handles vertical tangents easily, not limited to functions y=f(x), can represent closed curves, each axis treated independently.</p>
+<h3>Properties of Bezier Curve</h3>
+<ul>
+<li><strong>Endpoint interpolation:</strong> Curve passes exactly through first and last control points.</li>
+<li><strong>Convex hull:</strong> Entire curve lies within the convex hull of its control points.</li>
+<li><strong>Tangent at endpoints:</strong> Tangent at P₀ is along P₀P₁; tangent at Pₙ is along Pₙ₋₁Pₙ.</li>
+<li><strong>Affine invariance:</strong> Transforming control points = transforming the curve.</li>
+<li><strong>Variation diminishing:</strong> Curve doesn't oscillate more than the control polygon.</li>
+<li><strong>Global control:</strong> Every control point influences the entire curve.</li>
+<li><strong>Degree = n:</strong> n+1 control points → degree n polynomial.</li>
+<li><strong>Symmetry:</strong> Reversing order of control points gives same curve shape.</li>
+</ul>`},
+
+{ch:'ch5',y:'2079',s:'Sec B·Q7',m:'5',
+t:'What are <em>blobby objects</em>? How are they represented? Explain wireframe representation of 3D objects.',
+a:`<h3>Blobby Objects</h3>
+<p>Blobby objects are <strong>soft, organic-looking objects</strong> that model shapes with smooth, fluid boundaries — such as water droplets, muscles, or metaballs. They use <strong>implicit surface representation</strong>.</p>
+<h3>Representation</h3>
+<p>Each blob is a point (or set of points) with an influence function B(r). The overall surface is defined where the sum of all influences equals a threshold T:</p>
+<pre><code>F(x,y,z) = Σ Bᵢ(r) = T
+
+Common influence: Bᵢ(r) = a·e^(−b·r²)  (Gaussian)
+where r = distance from blob center</code></pre>
+<p>When two blobs come close, their fields <strong>merge smoothly</strong> (metaball effect).</p>
+<h3>Wireframe Representation</h3>
+<p>A <strong>wireframe model</strong> represents a 3D object using only its <strong>edges and vertices</strong> — no surfaces or filled areas.</p>
+<ul>
+<li>Stores: vertex coordinates + edge connectivity list.</li>
+<li>Lightest model — fastest to render.</li>
+<li>Lacks surface information — can be ambiguous (unclear which face is in front).</li>
+<li>Used in CAD, preliminary modeling, and real-time visualization where speed matters.</li>
+</ul>
+<p>Data structure: <strong>Vertex table</strong> (coordinates) + <strong>Edge table</strong> (pairs of vertex indices).</p>`},
+
+{ch:'ch5',y:'2079',s:'Sec B·Q10',m:'5',
+t:'What is a <em>polygon table</em>? Explain the use of this method in 3D object representation.',
+a:`<h3>Polygon Table</h3>
+<p>A polygon table is a data structure used to represent 3D objects as a collection of planar polygon faces (usually triangles or quads). It consists of three interconnected tables:</p>
+<table>
+<thead><tr><th>Table</th><th>Contents</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td><strong>Vertex Table</strong></td><td>3D coordinates of each vertex</td><td>V1:(1,0,0), V2:(0,1,0)…</td></tr>
+<tr><td><strong>Edge Table</strong></td><td>Pairs of vertex indices forming edges</td><td>E1: V1−V2, E2: V2−V3…</td></tr>
+<tr><td><strong>Polygon (Face) Table</strong></td><td>List of edges (or vertices) forming each face</td><td>F1: E1,E2,E3</td></tr>
+</tbody>
+</table>
+<h3>Uses in 3D Object Representation</h3>
+<ul>
+<li><strong>Surface normal calculation:</strong> Cross product of two edge vectors gives face normal → used for lighting calculations.</li>
+<li><strong>Back face culling:</strong> Dot product of face normal with view vector determines visibility.</li>
+<li><strong>Hidden surface removal:</strong> Z-buffer and scan-line algorithms traverse polygon tables.</li>
+<li><strong>Shading:</strong> Gouraud and Phong shading interpolate normals across polygon faces.</li>
+<li><strong>Collision detection</strong> and ray tracing also use polygon tables for intersection tests.</li>
+</ul>`},
+
+{ch:'ch5',y:'2078',s:'Sec B·Q6',m:'5',
+t:'Define fractal. Explain the <em>Bezier curve and B-spline curve</em>.',
+a:`<h3>Fractal</h3>
+<p>A <strong>fractal</strong> is a self-similar geometric shape that exhibits the same pattern at every scale of magnification. Examples: Mandelbrot set, Koch snowflake, Sierpinski triangle. Used in CG for natural terrain, clouds, coastlines.</p>
+<h3>Bezier Curve</h3>
+<p>Defined by n+1 control points using Bernstein polynomials:</p>
+<pre><code>P(t) = Σ Bᵢₙ(t)·Pᵢ,  Bᵢₙ(t) = C(n,i)·tⁱ·(1−t)^(n−i)</code></pre>
+<ul>
+<li>Passes through first and last control point only.</li>
+<li>Global control — one point affects entire curve.</li>
+<li>Degree = number of control points − 1.</li>
+<li>Convex hull and variation diminishing properties.</li>
+</ul>
+<h3>B-Spline Curve</h3>
+<p>Defined by control points and a knot vector using recursive basis functions:</p>
+<pre><code>P(t) = Σ Pᵢ·Nᵢ,k(t)</code></pre>
+<ul>
+<li><strong>Local control</strong> — moving one point affects only k segments.</li>
+<li>Degree independent of number of control points.</li>
+<li>Guaranteed Cᵏ⁻² continuity.</li>
+<li>More flexible than Bezier for complex shapes.</li>
+</ul>`},
+
+{ch:'ch5',y:'2077',s:'Sec A·Q2',m:'10',
+t:'How is polygon table used in representing polygons? Explain the representations of any <em>three curves</em>.',
+a:`<h3>Polygon Table (See Unit 5 Q10 above for full detail)</h3>
+<p>A 3D object is stored as a <strong>Vertex Table + Edge Table + Face Table</strong>. Each face is a planar polygon defined by its boundary edges and vertices. Surface normals are computed per face for lighting and visibility checks.</p>
+<h3>Three Curve Representations</h3>
+<h3>1. Hermite Curve</h3>
+<p>Defined by <strong>two endpoints and two tangent vectors</strong> at those endpoints.</p>
+<pre><code>P(t) = H₁(t)·P₁ + H₂(t)·P₄ + H₃(t)·R₁ + H₄(t)·R₄
+where H₁=(2t³−3t²+1), H₂=(−2t³+3t²), H₃=(t³−2t²+t), H₄=(t³−t²)</code></pre>
+<p>Advantage: designer directly controls tangent direction at endpoints.</p>
+<h3>2. Bezier Curve</h3>
+<p>Uses n+1 control points with Bernstein basis functions. Curve passes through first/last point only. Global control, convex hull property.</p>
+<h3>3. B-Spline Curve</h3>
+<p>Uses control points + knot vector with recursive basis functions. Local control — changing one point only affects k curve segments. Cᵏ⁻² continuity at knots. More flexible than Bezier for complex shapes.</p>`},
+
+{ch:'ch5',y:'2075',s:'Sec B·Q7',m:'5',
+t:'What is the purpose of <em>wireframe representation</em>? Describe boundary and space partitioning.',
+a:`<h3>Purpose of Wireframe Representation</h3>
+<p>Wireframe shows only the <strong>edges and vertices</strong> of a 3D model. Purposes:</p>
+<ul>
+<li>Quick visualization of shape and structure without rendering overhead.</li>
+<li>Used during modeling to see underlying geometry.</li>
+<li>Helpful for checking topology and connectivity of mesh.</li>
+<li>Foundation for surface and solid modeling.</li>
+</ul>
+<h3>Boundary Representation (B-Rep)</h3>
+<p>Defines a solid by its <strong>boundary surfaces</strong> (faces, edges, vertices). A solid = a closed set of faces that separate interior from exterior. Stores: face list, edge list, vertex list + topological relationships (Euler operators). Used in CAD/CAM.</p>
+<h3>Space Partitioning Representation</h3>
+<p>Divides 3D space into smaller regions to represent objects. Two main types:</p>
+<ul>
+<li><strong>Octree:</strong> Recursively divides space into 8 octants. Each node is FULL, EMPTY, or PARTIAL. Efficient for spatial queries.</li>
+<li><strong>BSP Tree:</strong> Recursively divides space with arbitrary half-planes. Used for visible surface determination and collision detection.</li>
+<li><strong>Voxel:</strong> Regular 3D grid of volume elements — used in medical imaging (CT/MRI).</li>
+</ul>`},
+
+{ch:'ch5',y:'2075',s:'Sec B·Q12',m:'5',
+t:'Mention any two color commands in OpenGL. Explain about <em>Hermite curve</em>.',
+a:`<h3>OpenGL Color Commands</h3>
+<ul>
+<li><strong>glColor3f(r, g, b):</strong> Sets current color using RGB float values (0.0–1.0). e.g., <code>glColor3f(1.0, 0.0, 0.0)</code> = red.</li>
+<li><strong>glColor4f(r, g, b, a):</strong> Sets RGBA color including alpha (transparency). e.g., <code>glColor4f(0.0, 1.0, 0.0, 0.5)</code> = semi-transparent green.</li>
+</ul>
+<h3>Hermite Curve</h3>
+<p>A Hermite curve is a cubic polynomial defined by:</p>
+<ul>
+<li><strong>P₁:</strong> Start point</li>
+<li><strong>P₄:</strong> End point</li>
+<li><strong>R₁:</strong> Tangent vector at start</li>
+<li><strong>R₄:</strong> Tangent vector at end</li>
+</ul>
+<pre><code>P(t) = H₁(t)·P₁ + H₂(t)·P₄ + H₃(t)·R₁ + H₄(t)·R₄
+
+Hermite basis functions:
+H₁(t) = 2t³ − 3t² + 1
+H₂(t) = −2t³ + 3t²
+H₃(t) = t³ − 2t² + t
+H₄(t) = t³ − t²</code></pre>
+<p><strong>Advantage:</strong> Designer directly specifies tangent directions → intuitive shape control.<br>
+<strong>Relation to Bezier:</strong> Hermite and Bezier are mathematically equivalent — they can be converted using a basis transformation matrix.</p>`},
+
+// ─── UNIT 6 ───────────────────────────────────────────────────
+{ch:'ch6',y:'2081',s:'Sec A·Q3',m:'10',
+t:'Explain <em>Binary Space Partitioning (BSP) trees</em> with a suitable example.',
+a:`<h3>Binary Space Partitioning (BSP) Tree</h3>
+<p>A BSP tree is a data structure that recursively <strong>subdivides 3D space into two half-spaces</strong> using splitting planes (hyperplanes). Each node in the tree represents a convex region.</p>
+<h3>Construction Algorithm</h3>
+<pre><code>BSP_Build(polygon_list):
+  If list is empty → return
+  Select a root polygon P (splitting plane)
+  For each other polygon Q:
+    If Q is entirely in front of P → add to front list
+    If Q is entirely behind P → add to back list
+    If Q straddles P → split Q into Q_front and Q_back
+  node.front = BSP_Build(front_list)
+  node.back  = BSP_Build(back_list)</code></pre>
+<h3>Traversal for Visible Surface (back-to-front)</h3>
+<pre><code>BSP_Display(node, viewpoint):
+  If viewpoint is in front of node's plane:
+    BSP_Display(node.back, viewpoint)   ← draw back first
+    Draw node's polygon
+    BSP_Display(node.front, viewpoint)
+  Else:
+    BSP_Display(node.front, viewpoint)
+    Draw node's polygon
+    BSP_Display(node.back, viewpoint)</code></pre>
+<h3>Example</h3>
+<p>Given polygons A, B, C, D in a room:</p>
+<ul>
+<li>Root: polygon A splits space into front/back.</li>
+<li>Front subtree: B is in front, further split by C.</li>
+<li>Back subtree: D is behind A.</li>
+<li>For a given viewpoint, traversal automatically gives back-to-front order → correct rendering via Painter's algorithm.</li>
+</ul>
+<h3>Advantages</h3>
+<ul>
+<li>Built once, used for any viewpoint.</li>
+<li>Efficient for static scenes.</li>
+<li>Guarantees correct rendering order.</li>
+</ul>
+<h3>Disadvantages</h3>
+<ul>
+<li>Construction is slow and expensive.</li>
+<li>Not efficient for dynamic scenes (polygons move).</li>
+<li>Splitting polygons increases polygon count.</li>
+</ul>`},
+
+{ch:'ch6',y:'2081',s:'Sec B·Q12a',m:'5',
+t:'Short note on <em>Sweep Representation</em> in solid modeling.',
+a:`<h3>Sweep Representation</h3>
+<p>Sweep representation creates a 3D solid by <strong>moving (sweeping) a 2D shape along a path</strong>.</p>
+<h3>Types</h3>
+<ul>
+<li><strong>Translational sweep:</strong> A 2D profile is extruded along a straight line (e.g., a circle swept along its axis creates a cylinder).</li>
+<li><strong>Rotational sweep (surface of revolution):</strong> A 2D profile is rotated about an axis (e.g., rotating a curve about the y-axis creates a vase shape).</li>
+<li><strong>General sweep:</strong> The 2D shape moves along an arbitrary 3D curve, possibly changing scale or orientation.</li>
+</ul>
+<h3>Applications</h3>
+<ul>
+<li>Modeling pipes, cylinders, torii, bottles.</li>
+<li>CAD/CAM design of mechanical parts.</li>
+<li>Font/text extrusion in 3D.</li>
+</ul>
+<h3>Advantages</h3>
+<ul>
+<li>Intuitive — easy to define complex solids from simple 2D profiles.</li>
+<li>Compact representation.</li>
+</ul>
+<h3>Limitation</h3>
+<p>Limited to objects that can be defined by a swept profile — not suitable for arbitrary free-form shapes.</p>`},
+
+{ch:'ch6',y:'2080',s:'Sec B·Q10',m:'5',
+t:'What do you understand by <em>solid modeling</em>? Explain binary space partition method.',
+a:`<h3>Solid Modeling</h3>
+<p>Solid modeling is a consistent set of principles for <strong>mathematical and computer modeling of 3D solid objects</strong>. Unlike wireframe or surface models, solid models completely describe the interior, surface, and boundary of an object. They support Boolean operations (union, intersection, difference) and physical simulations.</p>
+<h3>Common Representations</h3>
+<ul>
+<li>B-Rep (Boundary Representation)</li>
+<li>CSG (Constructive Solid Geometry)</li>
+<li>Octree, BSP tree, Sweep</li>
+</ul>
+<h3>BSP Tree Method (see Unit 6 Q1 for full detail)</h3>
+<p>The BSP tree recursively divides space using splitting planes. Each node stores a polygon whose plane divides the remaining polygons into front and back sets. Traversal gives a back-to-front rendering order for any viewpoint without per-frame sorting.</p>
+<p><strong>Key use in solid modeling:</strong> BSP trees can determine point-in-solid membership (inside/outside test) and support Boolean set operations on solids.</p>`},
+
+{ch:'ch6',y:'2077',s:'Sec B·Q7',m:'5',
+t:'Describe how a polygon can be represented using <em>BSP tree</em> with example.',
+a:`<h3>BSP Tree Polygon Representation</h3>
+<p>Polygons are organized in a BSP tree so that for any viewpoint, an in-order traversal gives correct back-to-front drawing order.</p>
+<h3>Example</h3>
+<p>Consider 4 polygons: P1, P2, P3, P4 in a scene.</p>
+<pre><code>Step 1: Choose P1 as root splitting plane.
+        - P2 is entirely in front of P1 → front child
+        - P3 is entirely behind P1 → back child
+        - P4 straddles P1 → split into P4f (front) and P4b (back)
+
+Step 2: Front subtree: P2 as root
+        - P4f goes into back of P2
+
+Step 3: Back subtree: P3 as root
+        - P4b goes into front of P3
+
+BSP Tree:
+            P1
+           /  \
+         P2    P3
+        /      /
+      P4f    P4b</code></pre>
+<h3>Rendering (back to front from viewpoint V)</h3>
+<ul>
+<li>If V is in front of P1: traverse back (P3,P4b) → draw P1 → traverse front (P2,P4f)</li>
+<li>Result: correct Painter's algorithm order for any viewpoint.</li>
+</ul>`},
+
+{ch:'ch6',y:'2075',s:'Sec A·Q3',m:'10',
+t:'Explain about <em>sweep, octree and boundary representations</em> for solid modeling.',
+a:`<h3>1. Sweep Representation</h3>
+<p>A 2D profile is swept along a path to generate a 3D solid.</p>
+<ul>
+<li><strong>Translational:</strong> Extrude profile along straight line → prism, cylinder.</li>
+<li><strong>Rotational:</strong> Rotate profile around axis → sphere, cone, vase.</li>
+<li>Used in CAD for manufacturing parts.</li>
+</ul>
+<h3>2. Octree Representation</h3>
+<p>Divides 3D space recursively into <strong>8 octants</strong>. Each node is classified as:</p>
+<ul>
+<li><strong>BLACK (Full):</strong> Entirely inside the solid.</li>
+<li><strong>WHITE (Empty):</strong> Entirely outside.</li>
+<li><strong>GRAY (Partial):</strong> Partially inside → subdivide further.</li>
+</ul>
+<p>Subdivision stops at a predetermined resolution or when node is fully black/white.</p>
+<p><strong>Applications:</strong> Collision detection, ray tracing, spatial queries, 3D printing.</p>
+<h3>3. Boundary Representation (B-Rep)</h3>
+<p>Describes a solid by its <strong>bounding surfaces</strong>. A solid = closed set of faces with correct topology.</p>
+<ul>
+<li><strong>Vertex table:</strong> 3D coordinates.</li>
+<li><strong>Edge table:</strong> Connects two vertices.</li>
+<li><strong>Face table:</strong> Bounded by closed loops of edges.</li>
+</ul>
+<p>Must satisfy <strong>Euler's formula:</strong> V − E + F = 2 (for simple polyhedra).<br>
+Supports Boolean operations and is the most widely used representation in solid modeling (used in STEP, IGES formats).</p>`},
+
+// ─── UNIT 7 ───────────────────────────────────────────────────
+{ch:'ch7',y:'2081',s:'Sec B·Q8',m:'5',
+t:'Compare the <em>Scanline Method</em> for visible surface detection with the <em>Depth Buffer (Z-buffer) Method</em>.',
+a:`<h3>Scanline vs Z-buffer Method</h3>
+<table>
+<thead><tr><th>Feature</th><th>Scanline Method</th><th>Z-buffer Method</th></tr></thead>
+<tbody>
+<tr><td>Processing</td><td>One scan line at a time</td><td>One pixel at a time</td></tr>
+<tr><td>Memory</td><td>Only stores one scan line</td><td>Full-screen depth buffer required</td></tr>
+<tr><td>Speed</td><td>Faster for sparse scenes</td><td>Fast with hardware support</td></tr>
+<tr><td>Transparency</td><td>Can handle with sorting</td><td>Cannot handle correctly</td></tr>
+<tr><td>Anti-aliasing</td><td>Easier to implement</td><td>More complex</td></tr>
+<tr><td>Simplicity</td><td>More complex (AET needed)</td><td>Very simple algorithm</td></tr>
+<tr><td>Space type</td><td>Image space</td><td>Image space</td></tr>
+<tr><td>Hardware</td><td>Less hardware-friendly</td><td>Standard in all GPUs</td></tr>
+</tbody>
+</table>
+<h3>Z-buffer Algorithm</h3>
+<pre><code>Initialize: depth_buffer[x][y] = ∞, frame_buffer = background
+For each polygon:
+  For each pixel (x,y) in polygon:
+    Compute z value at (x,y)
+    If z < depth_buffer[x][y]:
+      depth_buffer[x][y] = z
+      frame_buffer[x][y] = color of polygon at (x,y)</code></pre>`},
+
+{ch:'ch7',y:'2079',s:'Sec A·Q2',m:'10',
+t:'Differentiate between <em>object space and image space</em> methods of hidden surface removal. Describe the Z-buffer algorithm.',
+a:`<h3>Object Space vs Image Space</h3>
+<table>
+<thead><tr><th>Feature</th><th>Object Space</th><th>Image Space</th></tr></thead>
+<tbody>
+<tr><td>Comparisons</td><td>Between objects/polygons</td><td>At each pixel</td></tr>
+<tr><td>Precision</td><td>Floating point (exact)</td><td>Limited by resolution</td></tr>
+<tr><td>Complexity</td><td>O(n²) polygon comparisons</td><td>O(n×pixels)</td></tr>
+<tr><td>Examples</td><td>Painter's algorithm, BSP tree</td><td>Z-buffer, A-buffer, Scanline</td></tr>
+<tr><td>Resolution independence</td><td>Yes</td><td>No — tied to display res</td></tr>
+<tr><td>Good for</td><td>Small polygon count</td><td>Complex scenes, hardware</td></tr>
+</tbody>
+</table>
+<h3>Z-Buffer (Depth Buffer) Algorithm</h3>
+<p>An image-space method that stores the depth (z-value) of the closest surface at each pixel.</p>
+<h3>Algorithm</h3>
+<pre><code>Initialization:
+  depth_buffer[x][y] = +∞  for all pixels
+  frame_buffer[x][y] = background_color
+
+For each polygon P in scene:
+  For each pixel (x,y) covered by P:
+    Calculate z_P at (x,y) using plane equation:
+      z = (−ax − by − d) / c   (from ax+by+cz+d=0)
+    If z_P < depth_buffer[x][y]:
+      depth_buffer[x][y] = z_P
+      frame_buffer[x][y] = shaded_color(P, x, y)</code></pre>
+<h3>Advantages</h3>
+<ul><li>Simple to implement. Hardware support in all GPUs. Handles any scene complexity.</li></ul>
+<h3>Disadvantages</h3>
+<ul>
+<li>Large memory needed (full-screen depth buffer).</li>
+<li>Cannot correctly handle transparent objects.</li>
+<li>Z-fighting artifacts when polygons are coplanar.</li>
+</ul>`},
+
+{ch:'ch7',y:'2078',s:'Sec B·Q10',m:'5',
+t:'What is the advantage of <em>real-time rendering over offline rendering</em>? Discuss the limitations of Z-Buffer algorithm.',
+a:`<h3>Real-time vs Offline Rendering</h3>
+<table>
+<thead><tr><th>Feature</th><th>Real-time</th><th>Offline</th></tr></thead>
+<tbody>
+<tr><td>Frame rate</td><td>30–120+ fps</td><td>Minutes–hours per frame</td></tr>
+<tr><td>Quality</td><td>Lower (approximations)</td><td>Photorealistic</td></tr>
+<tr><td>Interactivity</td><td>Yes (games, VR)</td><td>No (films, VFX)</td></tr>
+<tr><td>Hardware</td><td>GPU rasterization</td><td>CPU/GPU ray tracing</td></tr>
+</tbody>
+</table>
+<p><strong>Advantages of real-time:</strong> Immediate visual feedback, user interaction, suitable for games/simulation/VR, responds to input instantly.</p>
+<h3>Limitations of Z-Buffer Algorithm</h3>
+<ul>
+<li><strong>Memory:</strong> Requires W×H depth buffer → large for high resolutions.</li>
+<li><strong>Transparency:</strong> Cannot correctly render transparent/translucent objects (only stores one depth per pixel).</li>
+<li><strong>Z-fighting:</strong> When two polygons have nearly equal z-values, flickering artifacts occur due to floating-point precision limits.</li>
+<li><strong>No anti-aliasing:</strong> Standard z-buffer doesn't support anti-aliasing (A-buffer solves this).</li>
+<li><strong>Overdraw:</strong> Pixels may be overwritten multiple times — wasteful for opaque objects (solved by early z-test).</li>
+</ul>`},
+
+{ch:'ch7',y:'2077',s:'Sec B·Q8',m:'5',
+t:'What is the role of <em>ray tracing</em> in visible surface detection? Explain how scan line algorithm is used for back face detection.',
+a:`<h3>Ray Tracing for Visible Surface Detection</h3>
+<p>Ray tracing casts a ray from the <strong>viewpoint through each pixel</strong> into the scene. The closest object the ray intersects is the visible surface for that pixel.</p>
+<pre><code>For each pixel (x,y):
+  Generate ray R from eye through (x,y)
+  For each object O:
+    Compute intersection of R with O
+  Find nearest intersection point → visible surface
+  Shade that point (apply lighting, reflections, shadows)</code></pre>
+<p><strong>Advantages:</strong> Naturally handles reflections, refractions, shadows. Physically accurate.<br>
+<strong>Disadvantage:</strong> Computationally expensive — O(pixels × objects).</p>
+<h3>Scan Line Algorithm for Back Face Detection</h3>
+<p><strong>Back face culling:</strong> A polygon is back-facing (invisible) if its surface normal points away from the viewer.</p>
+<pre><code>For each polygon with normal N:
+  Compute dot product: D = N · V  (V = view direction vector)
+  If D < 0  → back face → cull (don't render)
+  If D ≥ 0  → front face → render</code></pre>
+<p>In scan-line rendering, the <strong>z-increment</strong> for each polygon can be precomputed from its plane equation, and the algorithm fills only front-facing polygons. Back faces are skipped entirely, reducing fill operations by ~50% for closed objects.</p>`},
+
+{ch:'ch7',y:'2075',s:'Sec A·Q2',m:'10',
+t:'List any two disadvantages of BSP tree method. Compare <em>Painter\'s algorithm and A-Buffer algorithm</em>.',
+a:`<h3>Disadvantages of BSP Tree Method</h3>
+<ul>
+<li><strong>Construction cost:</strong> Building the BSP tree is computationally expensive and time-consuming — unsuitable for dynamic scenes.</li>
+<li><strong>Polygon splitting:</strong> Many polygons may need to be split, increasing the total polygon count significantly.</li>
+</ul>
+<h3>Painter's Algorithm vs A-Buffer</h3>
+<table>
+<thead><tr><th>Feature</th><th>Painter's Algorithm</th><th>A-Buffer</th></tr></thead>
+<tbody>
+<tr><td>Method</td><td>Sort polygons back-to-front, paint in order</td><td>Stores list of fragments per pixel</td></tr>
+<tr><td>Space type</td><td>Object space (sort) + image space (render)</td><td>Image space</td></tr>
+<tr><td>Transparency</td><td>Cannot handle correctly</td><td>Handles transparency perfectly</td></tr>
+<tr><td>Anti-aliasing</td><td>Not supported</td><td>Full anti-aliasing support</td></tr>
+<tr><td>Cyclic overlap</td><td>Fails — A in front of B, B in front of A</td><td>Handles correctly</td></tr>
+<tr><td>Memory</td><td>Low</td><td>High — stores fragment lists</td></tr>
+<tr><td>Speed</td><td>Sorting overhead O(n log n)</td><td>Slower due to fragment processing</td></tr>
+<tr><td>Use</td><td>Simple static scenes</td><td>High-quality offline rendering</td></tr>
+</tbody>
+</table>`},
+
+// ─── UNIT 8 ───────────────────────────────────────────────────
+{ch:'ch8',y:'2081',s:'Sec B·Q11',m:'5',
+t:'Describe any <em>two basic illumination models</em>.',
+a:`<h3>1. Diffuse Reflection (Lambertian Model)</h3>
+<p>Models <strong>matte surfaces</strong> that scatter light equally in all directions. Intensity depends on the angle between the surface normal N and the light direction L:</p>
+<pre><code>I_d = I_L · k_d · (N̂ · L̂) = I_L · k_d · cos θ</code></pre>
+<ul>
+<li><code>I_L</code> = intensity of light source</li>
+<li><code>k_d</code> = diffuse reflection coefficient (0 to 1)</li>
+<li><code>θ</code> = angle between N and L</li>
+<li>If N·L &lt; 0 → surface faces away → I_d = 0</li>
+</ul>
+<p>Result: surface appears equally bright from any viewing angle.</p>
+<h3>2. Specular Reflection (Phong Model)</h3>
+<p>Models <strong>shiny surfaces</strong> with bright highlights. Depends on the angle between the reflection vector R and the view vector V:</p>
+<pre><code>I_s = I_L · k_s · (R̂ · V̂)ⁿ = I_L · k_s · cosⁿ α</code></pre>
+<ul>
+<li><code>k_s</code> = specular coefficient</li>
+<li><code>n</code> = shininess exponent (higher = sharper highlight)</li>
+<li><code>R = 2(N·L)N − L</code> = reflection vector</li>
+</ul>
+<p>The complete Phong illumination model = Ambient + Diffuse + Specular:</p>
+<pre><code>I = I_a·k_a + I_L·k_d·(N·L) + I_L·k_s·(R·V)ⁿ</code></pre>`},
+
+{ch:'ch8',y:'2081',s:'Sec B·Q12b',m:'5',
+t:'Short note on <em>Intensity Attenuation</em>.',
+a:`<h3>Intensity Attenuation</h3>
+<p>Intensity attenuation describes how the <strong>intensity of light decreases as distance from the source increases</strong>. In the real world, light follows the inverse square law.</p>
+<h3>Attenuation Formula</h3>
+<pre><code>f_att = 1 / (a + b·d + c·d²)
+
+where:
+  d = distance from light source to surface
+  a = constant attenuation coefficient
+  b = linear attenuation coefficient
+  c = quadratic attenuation coefficient</code></pre>
+<h3>Modified Illumination Model</h3>
+<pre><code>I = I_a·k_a + f_att·I_L·[k_d·(N·L) + k_s·(R·V)ⁿ]</code></pre>
+<h3>Notes</h3>
+<ul>
+<li>Ambient light is <strong>not</strong> attenuated (it represents global scattered light).</li>
+<li>Setting a=1, b=0, c=0 → no attenuation (used for directional lights like the sun).</li>
+<li>For point lights, quadratic term gives most realistic falloff.</li>
+<li>OpenGL provides <code>glLightf(GL_CONSTANT_ATTENUATION, ...)</code> etc.</li>
+</ul>`},
+
+{ch:'ch8',y:'2080',s:'Sec B·Q11',m:'5',
+t:'How can a realistic image be generated? Explain <em>Fast Phong Shading</em>.',
+a:`<h3>Generating Realistic Images</h3>
+<p>Realism in CG is achieved through:</p>
+<ul>
+<li>Accurate illumination models (Phong, PBR)</li>
+<li>Texture mapping (surface detail)</li>
+<li>Shadow computation</li>
+<li>Transparency and reflection</li>
+<li>Anti-aliasing and depth of field</li>
+<li>Global illumination (ray tracing, radiosity)</li>
+</ul>
+<h3>Fast Phong Shading</h3>
+<p>Standard Phong shading computes the full lighting equation at every pixel — expensive due to the <code>(R·V)ⁿ</code> power computation. Fast Phong shading uses <strong>Taylor series approximation</strong> to speed up computation.</p>
+<h3>Method</h3>
+<p>Instead of computing <code>cos α = R·V</code> and raising to power n at every pixel, Fast Phong:</p>
+<ul>
+<li>Pre-computes specular values at vertices.</li>
+<li>Uses <strong>incremental/polynomial approximation</strong> across the polygon rather than full trigonometric evaluation.</li>
+<li>Approximates: <code>(R·V)ⁿ ≈ 1 − n(1−R·V)</code> for small deviations near the highlight center.</li>
+</ul>
+<h3>Advantage</h3>
+<p>Produces results visually very close to full Phong shading but with significantly fewer expensive operations per pixel — suitable for real-time use.</p>`},
+
+{ch:'ch8',y:'2079',s:'Sec B·Q11',m:'5',
+t:'Define the term "rendering" in computer graphics. Explain <em>Phong Shading Method</em> with its advantages and disadvantages.',
+a:`<h3>Rendering</h3>
+<p><strong>Rendering</strong> is the process of generating a 2D image from a 3D scene description using a computer. It applies lighting, texture, shading, and projection to produce the final visible output on screen.</p>
+<h3>Phong Shading</h3>
+<p><strong>Phong shading</strong> is a per-pixel shading method where the surface normal is <strong>interpolated across each pixel</strong> and the full Phong illumination model is applied at every pixel.</p>
+<h3>Algorithm</h3>
+<ol>
+<li>Compute vertex normals.</li>
+<li>Interpolate normals along polygon edges (bilinear interpolation).</li>
+<li>Interpolate normals across each scan line.</li>
+<li>At each pixel, apply: <code>I = I_a·k_a + I_L·k_d·(N·L) + I_L·k_s·(R·V)ⁿ</code></li>
+</ol>
+<h3>Advantages</h3>
+<ul>
+<li>Accurate, smooth specular highlights — highlights appear correctly even in center of polygon.</li>
+<li>Eliminates Mach band effect (seen in Gouraud).</li>
+<li>Very realistic appearance on curved/shiny surfaces.</li>
+</ul>
+<h3>Disadvantages</h3>
+<ul>
+<li>Computationally expensive — full lighting computed per pixel.</li>
+<li>Slower than Gouraud and flat shading.</li>
+<li>Still an approximation — no inter-reflections, no global illumination.</li>
+</ul>`},
+
+{ch:'ch8',y:'2078',s:'Sec B·Q9',m:'5',
+t:'Define intensity attenuation. Distinguish between <em>Gouraud shading and Phong shading</em> model.',
+a:`<h3>Intensity Attenuation</h3>
+<p>Light intensity decreases with distance from source: <code>f_att = 1/(a + b·d + c·d²)</code>. See Unit 8 Q2 for full detail.</p>
+<h3>Gouraud vs Phong Shading</h3>
+<table>
+<thead><tr><th>Feature</th><th>Gouraud Shading</th><th>Phong Shading</th></tr></thead>
+<tbody>
+<tr><td>Computed per</td><td>Vertex</td><td>Pixel</td></tr>
+<tr><td>Interpolates</td><td>Color/intensity</td><td>Normal vector</td></tr>
+<tr><td>Specular highlights</td><td>Often missed/blurred</td><td>Accurate, sharp</td></tr>
+<tr><td>Mach bands</td><td>Present (intensity discontinuity)</td><td>Eliminated</td></tr>
+<tr><td>Speed</td><td>Faster</td><td>Slower (lighting per pixel)</td></tr>
+<tr><td>Quality</td><td>Moderate</td><td>High</td></tr>
+<tr><td>Use</td><td>Real-time (games)</td><td>High-quality rendering</td></tr>
+</tbody>
+</table>
+<p><strong>Key difference:</strong> Gouraud interpolates the final shaded color; Phong interpolates the normal and recomputes lighting at every pixel.</p>`},
+
+{ch:'ch8',y:'2077',s:'Sec A·Q3',m:'10',
+t:'Define realism in human perception. Describe any <em>two polygon rendering methods</em>.',
+a:`<h3>Realism in Human Perception</h3>
+<p>Realism in CG refers to how convincingly a computer-generated image resembles the visual appearance of the real world. It involves accurate simulation of light behavior (reflection, shadow, transparency), surface texture, depth cues (perspective, occlusion, blur), and material properties.</p>
+<h3>Polygon Rendering Methods</h3>
+<h3>1. Flat Shading (Constant Intensity Shading)</h3>
+<p>The illumination model is computed <strong>once per polygon</strong> using a single surface normal (usually the face normal). The entire polygon is filled with this single color.</p>
+<pre><code>I = I_a·k_a + I_L·k_d·(N·L) + I_L·k_s·(R·V)ⁿ  ← computed once</code></pre>
+<p><strong>Advantages:</strong> Fastest, simplest.<br>
+<strong>Disadvantage:</strong> Polygon boundaries clearly visible — faceted, unrealistic appearance for curved objects.</p>
+<h3>2. Gouraud Shading</h3>
+<p>Illumination computed at each <strong>vertex</strong> using vertex normals (average of adjacent face normals). Colors are then <strong>bilinearly interpolated</strong> across the polygon interior.</p>
+<pre><code>At each vertex: compute Iᵥ using Phong illumination
+Across polygon: interpolate Iᵥ values</code></pre>
+<p><strong>Advantages:</strong> Smooth color transitions, removes polygon boundary artifacts.<br>
+<strong>Disadvantage:</strong> Specular highlights can be missed if they fall inside a polygon (not at a vertex). Mach banding still occurs.</p>
+<h3>3. Phong Shading</h3>
+<p>Normal vectors interpolated per pixel, full lighting computed at every pixel. Best quality, highest cost. See Unit 8 Q3 for detail.</p>`},
+
+{ch:'ch8',y:'2075',s:'Sec B·Q10',m:'5',
+t:'How can we detect <em>shadows</em> in computer graphics? List the challenges in computing the light model.',
+a:`<h3>Shadow Detection Methods</h3>
+<p><strong>1. Shadow Volumes:</strong> Project silhouette edges of objects away from light source to form a shadow volume in 3D space. If a point is inside a shadow volume, it is in shadow.</p>
+<p><strong>2. Shadow Maps:</strong> Render the scene from the light's point of view → store depth in a shadow map texture. When rendering from camera, compare each point's depth from light with shadow map → if farther, it's in shadow.</p>
+<p><strong>3. Ray Tracing:</strong> Cast a <em>shadow ray</em> from each surface point toward the light source. If the ray is blocked by another object → the point is in shadow.</p>
+<h3>Challenges in Computing Light Model</h3>
+<ul>
+<li><strong>Multiple light sources:</strong> Each adds cost — n lights = n times the illumination computation.</li>
+<li><strong>Soft shadows:</strong> Real shadows have penumbra (partial shadow) — requires area lights and many shadow rays.</li>
+<li><strong>Global illumination:</strong> Indirect light (light bouncing between surfaces — color bleeding) is very expensive to compute.</li>
+<li><strong>Transparency and refraction:</strong> Light bending through glass/water requires ray tracing.</li>
+<li><strong>Attenuation accuracy:</strong> Inverse square falloff must be balanced against scene scale.</li>
+<li><strong>Real-time constraints:</strong> Physically accurate lighting is too slow for 30+ fps rendering.</li>
+</ul>`},
+
+// ─── UNIT 9 ───────────────────────────────────────────────────
+{ch:'ch9',y:'2081',s:'Sec A·Q3',m:'10',
+t:'Explain <em>RGB color model</em>. Differentiate between <em>virtual reality and augmented reality</em> with examples.',
+a:`<h3>RGB Color Model</h3>
+<p>The <strong>RGB model</strong> is an additive color model where colors are created by combining Red, Green, and Blue light. It is the primary model for displays (monitors, TVs, phones).</p>
+<ul>
+<li>Each channel: 0 (off) to 255 (full) in 8-bit representation.</li>
+<li>(0,0,0) = Black, (255,255,255) = White.</li>
+<li>(255,0,0)=Red, (0,255,0)=Green, (0,0,255)=Blue.</li>
+<li>Mixing: R+G=Yellow, G+B=Cyan, R+B=Magenta, R+G+B=White.</li>
+</ul>
+<p>A 24-bit true color image stores 8 bits per channel → 2²⁴ ≈ 16.7 million colors. Used in frame buffers, image files (BMP, PNG, JPEG).</p>
+<h3>Virtual Reality (VR) vs Augmented Reality (AR)</h3>
+<table>
+<thead><tr><th>Feature</th><th>Virtual Reality (VR)</th><th>Augmented Reality (AR)</th></tr></thead>
+<tbody>
+<tr><td>Definition</td><td>Fully immersive synthetic environment — real world completely replaced</td><td>Real world enhanced with virtual overlays</td></tr>
+<tr><td>Immersion</td><td>Complete — user sees only virtual world</td><td>Partial — real world visible with additions</td></tr>
+<tr><td>Hardware</td><td>VR headset (Oculus, HTC Vive)</td><td>AR glasses (HoloLens), phone camera</td></tr>
+<tr><td>Examples</td><td>VR games (Beat Saber), VR training simulators, virtual tours</td><td>Pokemon Go, IKEA furniture placement app, surgical AR overlays</td></tr>
+<tr><td>User interaction</td><td>Interacts with virtual environment only</td><td>Interacts with real world + virtual elements</td></tr>
+<tr><td>Connection to reality</td><td>None during use</td><td>Real world is base layer</td></tr>
+</tbody>
+</table>`},
+
+{ch:'ch9',y:'2080',s:'Sec B·Q6',m:'5',
+t:'What is <em>virtual reality</em>? Explain some forms of virtual reality.',
+a:`<h3>Virtual Reality</h3>
+<p><strong>Virtual Reality (VR)</strong> is a computer-generated simulation of a three-dimensional environment that can be interacted with in a seemingly real or physical way using special electronic equipment (headsets, gloves, controllers).</p>
+<h3>Forms of Virtual Reality</h3>
+<ul>
+<li><strong>Immersive VR:</strong> User is completely surrounded by a synthetic environment using a head-mounted display (HMD) that tracks head movement. Example: Oculus Quest gaming.</li>
+<li><strong>Desktop VR (Window-on-World):</strong> 3D environment displayed on a standard monitor — no immersive hardware. User navigates with mouse/keyboard. Example: 3D walkthroughs on websites.</li>
+<li><strong>Augmented Reality (AR):</strong> Real-world view enhanced with computer-generated elements (see above). Example: HoloLens, AR navigation.</li>
+<li><strong>Telepresence:</strong> Remote-controlled robots or cameras allow the user to experience a distant location in real time. Example: surgical robots, space exploration.</li>
+<li><strong>CAVE (Cave Automatic Virtual Environment):</strong> A room with projection on all walls/floor creating an immersive environment without a headset.</li>
+</ul>`},
+
+{ch:'ch9',y:'2078',s:'Sec A·Q3',m:'10',
+t:'List some significance of <em>virtual reality</em>. Differentiate between VR and AR with examples.',
+a:`<h3>Significance of Virtual Reality</h3>
+<ul>
+<li><strong>Training & simulation:</strong> Military, flight simulators, surgical training — safe practice without real-world risk.</li>
+<li><strong>Education:</strong> Virtual field trips, anatomy exploration, historical reconstructions.</li>
+<li><strong>Healthcare:</strong> Pain management, phobia treatment (exposure therapy), rehabilitation.</li>
+<li><strong>Architecture & design:</strong> Virtual walkthroughs of buildings before construction.</li>
+<li><strong>Entertainment:</strong> Immersive gaming, virtual concerts, social VR platforms.</li>
+<li><strong>Manufacturing:</strong> Virtual prototyping and assembly planning.</li>
+</ul>
+<h3>VR vs AR</h3>
+<table>
+<thead><tr><th>Aspect</th><th>VR</th><th>AR</th></tr></thead>
+<tbody>
+<tr><td>Environment</td><td>Fully synthetic</td><td>Real + digital overlay</td></tr>
+<tr><td>Immersion</td><td>Complete</td><td>Partial</td></tr>
+<tr><td>Hardware</td><td>HMD, motion controllers</td><td>Smart glasses, smartphone</td></tr>
+<tr><td>Example</td><td>HTC Vive gaming, VR surgical sim</td><td>Pokémon Go, Google Maps AR, IKEA app</td></tr>
+<tr><td>Real-world visible</td><td>No</td><td>Yes</td></tr>
+</tbody>
+</table>`},
+
+{ch:'ch9',y:'2077',s:'Sec B·Q9',m:'5',
+t:'How does <em>virtual reality differ</em> from our real world? Describe some components of a VR system.',
+a:`<h3>VR vs Real World</h3>
+<ul>
+<li><strong>Physicality:</strong> Real world has mass, gravity, touch sensation. VR simulates these via haptic feedback — imperfectly.</li>
+<li><strong>Sensory completeness:</strong> Real world engages all senses. VR primarily visual and auditory; smell/taste missing.</li>
+<li><strong>Presence:</strong> Real world always feels real. VR achieves "presence" only partially — breaks easily (lag, resolution).</li>
+<li><strong>Latency:</strong> Real world is instantaneous. VR has rendering/tracking latency — causes motion sickness if &gt;20ms.</li>
+<li><strong>Consequences:</strong> Actions in real world have lasting effects. VR actions are reversible.</li>
+</ul>
+<h3>Components of a VR System</h3>
+<ul>
+<li><strong>Head-Mounted Display (HMD):</strong> Stereoscopic display that tracks head orientation to update the view in real time.</li>
+<li><strong>3D Position Trackers:</strong> Track head and body position using IMUs, optical sensors, or external sensors (inside-out/outside-in tracking).</li>
+<li><strong>Input Devices:</strong> Hand controllers, data gloves, haptic suits — for navigation and object manipulation.</li>
+<li><strong>Rendering System:</strong> High-performance GPU rendering 90+ fps stereo images to avoid motion sickness.</li>
+<li><strong>Audio System:</strong> 3D spatial audio using headphones with head-related transfer functions (HRTF).</li>
+</ul>`},
+
+{ch:'ch9',y:'2075',s:'Sec B·Q11',m:'5',
+t:'List some applications of VR. What might be possible <em>navigation techniques and manipulation interfaces</em> in virtual reality?',
+a:`<h3>Applications of VR</h3>
+<ul>
+<li><strong>Medical:</strong> Surgical simulation, phobia therapy, pain management.</li>
+<li><strong>Military:</strong> Combat training, vehicle simulation.</li>
+<li><strong>Education:</strong> Virtual labs, historical reconstructions, anatomy.</li>
+<li><strong>Architecture:</strong> Walkthrough of unbuilt buildings.</li>
+<li><strong>Entertainment:</strong> VR gaming, virtual cinema, social spaces.</li>
+<li><strong>Manufacturing:</strong> Assembly planning, ergonomics testing.</li>
+<li><strong>Space exploration:</strong> Training astronauts, simulating planetary surfaces.</li>
+</ul>
+<h3>Navigation Techniques in VR</h3>
+<ul>
+<li><strong>Physical walking:</strong> Walking in room-scale VR with positional tracking.</li>
+<li><strong>Teleportation:</strong> Point-and-click to jump to a location — avoids motion sickness.</li>
+<li><strong>Joystick/thumbstick locomotion:</strong> Analog stick movement — most common in games.</li>
+<li><strong>Gaze-directed steering:</strong> Look in a direction to move there.</li>
+<li><strong>Redirected walking:</strong> Subtle scene manipulation tricks the user into walking in circles while feeling they walk straight.</li>
+</ul>
+<h3>Manipulation Interfaces</h3>
+<ul>
+<li><strong>Hand controllers:</strong> Tracked 6DOF controllers with buttons and triggers.</li>
+<li><strong>Data gloves:</strong> Measure finger bending — allows natural grasping.</li>
+<li><strong>Hand tracking:</strong> Camera-based hand recognition without controllers (e.g., Oculus Hand Tracking).</li>
+<li><strong>Voice commands:</strong> Speak to select, activate, or navigate.</li>
+</ul>`},
+
+// ─── UNIT 10 ───────────────────────────────────────────────────
+{ch:'ch10',y:'2081',s:'Sec B·Q9',m:'5',
+t:'Explain any two functions in <em>OpenGL</em>. Write the basic commands to draw the pixel and polygon in OpenGL.',
+a:`<h3>Two OpenGL Functions</h3>
+<p><strong>1. glBegin(mode) / glEnd()</strong><br>
+Delimits a group of vertices that define a geometric primitive.</p>
+<pre><code>glBegin(GL_TRIANGLES);  // start drawing triangles
+  glVertex2f(0.0, 0.5);
+  glVertex2f(-0.5, -0.5);
+  glVertex2f(0.5, -0.5);
+glEnd();</code></pre>
+<p>Common modes: GL_POINTS, GL_LINES, GL_TRIANGLES, GL_QUADS, GL_POLYGON</p>
+<p><strong>2. glColor3f(r, g, b)</strong><br>
+Sets the current drawing color. Values 0.0–1.0.</p>
+<pre><code>glColor3f(1.0, 0.0, 0.0);  // red
+glColor3f(0.0, 1.0, 0.0);  // green</code></pre>
+<h3>Draw a Pixel</h3>
+<pre><code>glBegin(GL_POINTS);
+  glColor3f(1.0, 1.0, 0.0);   // yellow
+  glVertex2i(100, 150);        // pixel at (100,150)
+glEnd();</code></pre>
+<h3>Draw a Polygon (Triangle)</h3>
+<pre><code>glBegin(GL_POLYGON);
+  glColor3f(0.0, 0.5, 1.0);
+  glVertex2f(0.0,  0.5);
+  glVertex2f(-0.5, -0.5);
+  glVertex2f(0.5, -0.5);
+glEnd();</code></pre>`},
+
+{ch:'ch10',y:'2080',s:'Sec B·Q12a',m:'5',
+t:'Short note on <em>OpenGL</em>.',
+a:`<h3>OpenGL (Open Graphics Library)</h3>
+<p>OpenGL is an <strong>open-standard, cross-platform API</strong> for rendering 2D and 3D vector graphics. Developed by Silicon Graphics Inc. (SGI) in 1992, maintained by Khronos Group.</p>
+<h3>Key Features</h3>
+<ul>
+<li><strong>Platform independent:</strong> Works on Windows, Linux, macOS, embedded systems.</li>
+<li><strong>Low-level API:</strong> Direct access to GPU capabilities.</li>
+<li><strong>State machine:</strong> OpenGL maintains rendering state (current color, matrix, blend mode).</li>
+<li><strong>Pipeline:</strong> Vertices → Transformation → Clipping → Rasterization → Fragments → Frame buffer.</li>
+</ul>
+<h3>Important Commands</h3>
+<pre><code>glClear(GL_COLOR_BUFFER_BIT)  // clear screen
+glColor3f(r, g, b)            // set color
+glBegin(mode) / glEnd()       // define primitives
+glVertex2f/3f(x, y[, z])      // specify vertex
+glFlush()                     // force execution
+glutMainLoop()                // enter event loop</code></pre>
+<h3>Related libraries</h3>
+<ul>
+<li><strong>GLUT/freeGLUT:</strong> Window and event handling.</li>
+<li><strong>GLEW:</strong> Extension loading.</li>
+<li><strong>GLM:</strong> Math library for OpenGL.</li>
+</ul>`},
+
+{ch:'ch10',y:'2078',s:'Sec A·Q3',m:'10',
+t:'Demonstrate how a <em>polygon can be created using OpenGL</em>.',
+a:`<h3>Creating a Polygon in OpenGL</h3>
+<p>Below is a complete OpenGL/GLUT program to draw a colored polygon.</p>
+<pre><code>#include &lt;GL/glut.h&gt;
+
+void display() {
+    glClear(GL_COLOR_BUFFER_BIT);
+    
+    // Draw a filled pentagon
+    glBegin(GL_POLYGON);
+        glColor3f(0.2f, 0.6f, 1.0f);   // blue
+        glVertex2f(0.0f,  0.5f);         // top
+        glVertex2f(-0.5f, 0.2f);         // upper left
+        glVertex2f(-0.3f,-0.4f);         // lower left
+        glVertex2f( 0.3f,-0.4f);         // lower right
+        glVertex2f( 0.5f, 0.2f);         // upper right
+    glEnd();
+    
+    glFlush();
+}
+
+void init() {
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // black background
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluOrtho2D(-1.0, 1.0, -1.0, 1.0);     // set coordinate range
+}
+
+int main(int argc, char** argv) {
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+    glutInitWindowSize(500, 500);
+    glutCreateWindow("Polygon in OpenGL");
+    init();
+    glutDisplayFunc(display);
+    glutMainLoop();
+    return 0;
+}</code></pre>
+<h3>Key Functions Used</h3>
+<ul>
+<li><code>GL_POLYGON</code> — fills the polygon with current color.</li>
+<li><code>glVertex2f</code> — defines each vertex in 2D.</li>
+<li><code>gluOrtho2D</code> — sets up 2D orthographic projection.</li>
+<li><code>glutDisplayFunc</code> — registers the display callback.</li>
+<li><code>glutMainLoop</code> — starts the GLUT event processing loop.</li>
+</ul>`},
+
+{ch:'ch10',y:'2077',s:'Sec B·Q10',m:'5',
+t:'Write a procedure to <em>draw a line in OpenGL</em>.',
+a:`<h3>Drawing a Line in OpenGL</h3>
+<pre><code>#include &lt;GL/glut.h&gt;
+
+void display() {
+    glClear(GL_COLOR_BUFFER_BIT);
+    
+    // Draw a single line from (0.1, 0.1) to (0.8, 0.6)
+    glColor3f(1.0f, 1.0f, 0.0f);   // yellow line
+    glLineWidth(2.0f);               // line thickness
+    
+    glBegin(GL_LINES);
+        glVertex2f(0.1f, 0.1f);      // start point
+        glVertex2f(0.8f, 0.6f);      // end point
+    glEnd();
+    
+    glFlush();
+}
+
+void init() {
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluOrtho2D(0.0, 1.0, 0.0, 1.0);
+}
+
+int main(int argc, char** argv) {
+    glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+    glutInitWindowSize(400, 400);
+    glutCreateWindow("Line in OpenGL");
+    init();
+    glutDisplayFunc(display);
+    glutMainLoop();
+    return 0;
+}</code></pre>
+<h3>Other Line Modes</h3>
+<pre><code>GL_LINE_STRIP  // connected sequence of lines
+GL_LINE_LOOP   // connected lines + closing segment</code></pre>`},
+
+{ch:'ch10',y:'2075',s:'Sec B·Q4',m:'5',
+t:'Give the basic command to <em>draw the pixel and polygon in OpenGL</em>.',
+a:`<h3>Draw a Pixel</h3>
+<pre><code>glBegin(GL_POINTS);
+    glColor3f(1.0f, 0.0f, 0.0f);  // red
+    glVertex2i(200, 150);           // pixel at (200,150)
+glEnd();
+glFlush();</code></pre>
+<p>Use <code>glPointSize(n)</code> to set pixel size.</p>
+<h3>Draw a Polygon</h3>
+<pre><code>// Filled triangle
+glBegin(GL_TRIANGLES);
+    glColor3f(0.0f, 1.0f, 0.0f);
+    glVertex2f(-0.5f, -0.5f);
+    glVertex2f( 0.5f, -0.5f);
+    glVertex2f( 0.0f,  0.5f);
+glEnd();
+glFlush();</code></pre>
+<h3>Draw a Quad (4-sided polygon)</h3>
+<pre><code>glBegin(GL_QUADS);
+    glVertex2f(-0.5f, -0.5f);
+    glVertex2f( 0.5f, -0.5f);
+    glVertex2f( 0.5f,  0.5f);
+    glVertex2f(-0.5f,  0.5f);
+glEnd();</code></pre>`},
+
+{ch:'ch10',y:'2075',s:'Sec B·Q12',m:'5',
+t:'Mention any two <em>color commands in OpenGL</em>. Explain about Hermite curve.',
+a:`<h3>Two Color Commands in OpenGL</h3>
+<p><strong>1. glColor3f(r, g, b):</strong> Sets color using RGB float values (0.0–1.0).</p>
+<pre><code>glColor3f(1.0f, 0.5f, 0.0f);  // orange</code></pre>
+<p><strong>2. glColor4ub(r, g, b, a):</strong> Sets RGBA color using unsigned byte values (0–255).</p>
+<pre><code>glColor4ub(255, 0, 0, 128);   // semi-transparent red</code></pre>
+<h3>Hermite Curve</h3>
+<p>A Hermite curve is a cubic polynomial segment defined by <strong>two endpoints and two tangent vectors</strong>:</p>
+<pre><code>P(t) = H1(t)·P1 + H2(t)·P4 + H3(t)·R1 + H4(t)·R4,  t ∈ [0,1]
+
+Basis functions:
+H1(t) =  2t³ − 3t² + 1   (blend of P1)
+H2(t) = −2t³ + 3t²       (blend of P4)
+H3(t) =  t³ − 2t² + t    (blend of R1)
+H4(t) =  t³ − t²         (blend of R4)</code></pre>
+<p><strong>Properties:</strong> Passes through P1 (t=0) and P4 (t=1). Tangent at t=0 equals R1; tangent at t=1 equals R4. Designer has direct control over curve directions at endpoints.</p>`},
+];
+
+function buildApp(){
+  const app=document.getElementById('app');
+  CHAPTERS.forEach(ch=>{
+    const qs=Q.filter(q=>q.ch===ch.id);
+    const badge=ch.priority==='hot'
+      ?'<span class="priority p-hot">🔥 every year</span>'
+      :ch.priority==='freq'?'<span class="priority p-freq">frequent</span>':'';
+
+    const qsHtml=qs.map((q,i)=>`
+      <div class="q-wrap" data-year="${q.y}" data-ch="${ch.id}">
+        <div class="q-card" onclick="toggle(this.parentElement)">
+          <div class="q-meta">
+            <span class="q-year">${q.y}</span>
+            <span class="q-sec">${q.s}</span>
+            <span class="q-marks">${q.m} marks</span>
+          </div>
+          <div class="q-text">${q.t}</div>
+          <span class="chevron">▾</span>
+        </div>
+        <div class="answer-panel">
+          <div class="ans-content">${q.a}</div>
+          <div class="ans-footer"><span class="ans-badge">📖 Verify with Hearne &amp; Baker textbook</span></div>
+        </div>
+      </div>`).join('');
+
+    app.innerHTML+=`
+      <div class="chapter" id="${ch.id}">
+        <div class="ch-header">
+          <span class="ch-num">${ch.num}</span>
+          <span class="ch-name">${ch.name}${badge}</span>
+          <span class="ch-count" id="cnt_${ch.id}"></span>
+        </div>
+        <div class="freq-bar" style="width:${ch.freq}%"></div>
+        <div class="questions">${qsHtml}</div>
+        <div class="empty-msg" id="emp_${ch.id}">No questions for selected year.</div>
+      </div>`;
+  });
+}
+
+function toggle(wrap){
+  wrap.classList.toggle('open');
+}
+
+function setYear(year){
+  document.querySelectorAll('.year-btn').forEach(b=>b.classList.toggle('active',b.dataset.year===year));
+  let total=0;
+  CHAPTERS.forEach(ch=>{
+    const wraps=document.querySelectorAll(`.q-wrap[data-ch="${ch.id}"]`);
+    let vis=0;
+    wraps.forEach(w=>{
+      const show=year==='all'||w.dataset.year===year;
+      w.classList.toggle('hidden',!show);
+      if(show)vis++;
+    });
+    total+=vis;
+    const cnt=document.getElementById('cnt_'+ch.id);
+    if(cnt)cnt.textContent=`${vis} ${vis===1?'question':'questions'}`;
+    const emp=document.getElementById('emp_'+ch.id);
+    if(emp)emp.style.display=vis===0?'block':'none';
+  });
+  document.getElementById('total-q').textContent=total;
+}
+
+document.querySelectorAll('.year-btn').forEach(b=>b.addEventListener('click',()=>setYear(b.dataset.year)));
+buildApp();
+setYear('all');
+</script>
+</body>
+</html>
